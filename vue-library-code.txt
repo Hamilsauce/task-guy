@@ -1,0 +1,496 @@
+<!doctype html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Library App</title>
+    <script></script>
+<style type="text/css" id="dcoder_stylesheet">
+body {
+	color: rgba(83, 83, 83, 0.9);; 
+	font-size: 1.2em;
+}
+
+#btn  {
+
+//	position: absolute;
+}
+
+form {
+
+	padding: 10px;
+	margin: auto;
+	background: rgba(50, 180, 135, 1);
+//	border: 1px solid rgba(200, 150, 75, 0.7);
+	border-radius: 5%;
+}
+
+#lib-form {
+	padding: 2px;
+	margin: auto;
+	background: rgba(50, 180, 135, 1);
+	border: 1px solid rgba(50, 180, 135, 1);
+ 	border-radius: 10px;
+}
+
+#formHeader {
+	text-align: center;
+	color: white;
+}
+
+.inLabel {
+	margin-top: 5px;
+	padding: 0px 5px;
+	color: white;
+	font-size: 1.2em;
+}
+
+.textField {
+	margin-bottom: 10px;
+	margin-top: 3px;
+//	margin-left: 5p x;
+	padding: 5px 5px;
+	font-size: 1.1em;
+	height: 26px;
+	border: 1px solid rgba(200, 150, 75, 0.7);
+	color: rgba(83, 83, 83, 0.7);; 
+	border-radius: 5px;
+}
+
+#submit-button {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-left: 5px;
+	font-size: 1.1em;
+}
+
+#toggle {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-left: 5px;
+	font-size: 1.1em;
+}</style></head>
+
+<body>
+	 <div id="app">
+		<h1>Books!</h1>
+		<button id="toggle" @click="toggleForm">New Book</button><br>
+		<div id="lib-form">
+			<h2 id="formHeader">The Book Form from Hell!</h2>
+			<form v-if="!showForm" @submit.prevent="addNewBook">
+			
+			<hr>	
+			<label class="inLabel" for="titleIn">Book Title</label><br>
+			<input v-model="newBook.title" id="titleIn" name="titleIn" class="textField" type="text"><br>
+			<label class="inLabel" for="authorIn">Author</label><br>
+			<input v-model="newBook.author" id="authorIn" name="authorIn" class="textField" type="text"><br>			
+			<label class="inLabel" for="yearIn">Year Published</label><br>
+			<input v-model="newBook.year" id="yearIn" name="yearIn" class="textField" type="text"><br>
+			<input type="submit" id="submit-button" value="Add New Book">
+		</form>
+		<br>
+	<!--</div>	
+
+	<div id="lib-list">
+	-->
+		<ul id="bookList">
+			<li v-for="book in myBooks">{{ book }}</li>	
+		</ul>
+	</div>
+	
+	
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+const app = new Vue({
+	el: '#app',
+	data() { 
+		return {
+			showForm: true,
+			newBook: {
+				
+			}
+			}
+		}
+	},
+		
+	
+	
+});
+
+
+Vue.component("book-list", {
+            name: "book-list",
+            data() {
+                return {
+                    myBooks: []
+                }
+            },
+            methods: {
+                addBook() {
+                    console.log('book stuf');
+                }
+            },
+            template: '<div>books for days</div>'
+        });
+
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    showForm: true,
+                    employees: []
+                };
+            },
+            methods: {
+                getEmployees() {
+
+                    console.error(error);
+                }
+            }
+       });
+
+const libForm = new Vue({
+	el: '#lib-form',
+	data() { 
+		return {
+			showForm: true,
+			newBook: {
+				id: 0,
+				title: '',
+				author: '',
+				year: 1900,
+				isAvailable: true
+			}
+		}
+	},
+	methods: {
+		toggleForm() {
+			this.showForm = !this.showForm;
+		},	
+		addNewBook() {
+			this.setId(this.myBooks, this.newBook);
+			
+			const savedBook = this.newBook;
+			this.$emit('add:newBook': this.newBook);
+			this.newBook: {
+				id: 0,
+				title: '',
+				author: '',
+				year: 1900,
+				isAvailable: true
+			}
+		//	this.myBooks.push(savedBook);
+		   	this.toggleForm();
+		},
+	methods: {
+		toggleForm() {
+			this.showForm = !this.showForm;
+		},
+		
+		addNewBook() {
+			this.setId(this.myBooks, this.newBook);
+			
+			const savedBook = this.newBook;
+			this.$emit('add:newBook': this.newBook);
+			this.newBook: {
+				id: 0,
+				title: '',
+				author: '',
+				year: 1900,
+				isAvailable: true
+			}
+		//	this.myBooks.push(savedBook);
+			this.toggleForm();
+		},
+		
+		setId(objArr, newObj) {
+			let objIds = [];
+			let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b); 
+	
+			objIds = sortIds();
+			let userId = objIds[objIds.length - 1] + 1;
+	
+			return pushValidId(newObj, userId, objIds) ;
+
+			function pushValidId(newObj, newId, arr) {
+				let duper =  arr.some(u  =>  u  == newId);
+	
+				if(duper == false) {
+					newObj.id = newId ;	
+					console.log('duper found no dupes for new book ' + newObj.title);	
+			 	} else {
+ 					console.log('dupes!');
+				} 
+			}
+		}
+	}, 
+	
+	beforeCreate() {
+		this.showForm = true;
+		console.log(this.showForm);
+	}
+});
+
+
+const libList = new Vue({
+	el: '#lib-list',
+	data: {
+		return {
+			myBooks: [		
+		{
+			"id": 1,
+			"title": "The Road",
+			"author": "Cormac McCarthy",
+			"year": 1986,
+			"isAvailable": true
+		},
+		{
+			"id": 2,
+			"title": "Cat's Cradle",
+			"author": "Kurt  Vonnegut",
+			"year": 1970,
+			"isAvailable": false
+		},
+		{	
+			"id": 3,
+			"title": "Great Fatsby",
+			"author": "F Scott Fitzgerald",
+			"year": 1925,
+			"isAvailable": false
+		}
+	]
+
+	} //end of data return block
+},
+	methods: {		
+		addNewBook() {
+			this.setId(this.myBooks, this.newBook);
+			
+			const savedBook = this.newBook;
+			this.myBooks.push(savedBook);
+		}
+	},
+	
+});
+
+
+
+<!--
+
+/*
+
+const app = new Vue({
+	el: '#app',
+	data() { 
+		return {
+			showForm: false,
+			newBook: {
+				this.name: '' ,
+				author: '',
+				year: 1900,
+				checkedOut: false,
+			}, 
+			myBooks: ['Thing1', 'Thing2', 'Thing3', 'Thing4', 'Thing5']
+		}
+	},
+	methods: {
+		toggleForm() {
+			if(this.showForm == true) {
+				 this.showForm = false;
+			} else {
+				this.showForm = true;
+			}
+			console.log(this.showForm);
+			return this.showForm;
+		},
+		
+		addBook() {
+			let count = this.myThings.length;
+			this.myBooks.push(this.newBook);
+			this.newBook = '';
+		}
+	}
+});
+*/
+	-->
+</script>
+
+
+
+
+</div>
+    <title>Library App</title>
+    <script></script>
+
+
+
+
+    <div id="app">
+        <employee-form></employee-form>
+        <book-list></book-list>
+    </div>
+
+    <script>
+    	Vue.component("employee-form", {
+            name: "employee-form",
+            data() {
+                return {
+                    employee: {
+                        name: "",
+                        email: "",
+                    },
+
+                }
+            },
+            template: '<div>fuck me</div>'
+        });
+
+        Vue.component("book-list", {
+            name: "book-list",
+            data() {
+                return {
+                    myBooks: []
+                }
+            },
+            methods: {
+                addBook() {
+                    console.log('book stuf');
+                }
+            },
+            template: '<div>books for days</div>'
+        });
+
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    showForm: true,
+                    books: [ 
+                    
+                    
+                    ]
+                };
+            },
+            methods: {
+                getEmployees() {
+
+                    console.error(error);
+                }
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let books = [
+{
+	"id": 1,
+	"title": " ",
+	"author": " ",
+	"year": 1900,
+	"isAvailable": true
+},
+{
+	"id": 2,
+	"title": " ",
+	"author": " ",
+	"year": 1900,
+	"isAvailable": true
+},
+{
+	"id": 3,
+	"title": " ",
+	"author": " ",
+	"year": 1900,
+	"isAvailable": true
+},
+{
+	"id": 4,
+	"title": " ",
+	"author": " ",
+	"year": 1900,
+	"isAvailable": true
+}
+]
+    
+
+
+
+<script type="text/javascript" id="dcoder_script">//const users = require("/storage/emulated/0/Dcoder/userData.js");
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js">
+</head>
+<body>
+
+
+ <script>
+    Vue.component("lib-form", {
+            name: "lib-form",
+            data() {
+                return {
+                    newBook: {
+                        name: "",
+                        email: "",
+                    }
+                   }
+                  },
+	methods: {
+                addBook() {
+                    console.log('book stuf');
+                }
+            },
+            template: '<div>fuck me</div>'
+    });
+
+        Vue.component("book-list", {
+            name: "book-list",
+            data() {
+                return {
+                    myBooks: []
+                }
+            },
+            
+                }
+            },
+            template: '<div>books for days</div>'
+        });
+
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    showForm: true,
+                    books: [ 
+                    
+                    
+                    ]
+                };
+            },
+            methods: {
+                getEmployees() {
+
+                    console.error(error);
+                }
+            }
+        });
+    </script></body></html>
