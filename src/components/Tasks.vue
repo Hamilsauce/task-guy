@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 <template>
 	<div class="main">
 		<div id="list-container">
@@ -17,8 +15,8 @@
 					<input type="submit" value="+" id="submit-button" />
 				</div>
 			</form>
-			<div class="task-list-view">
-				<ul>
+			<div >
+				<ul class="task-list-view">
 					<transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
@@ -114,7 +112,7 @@
 			initalizeTasks() {
 				let storedTasks = localStorage.getItem("taskGuyList")
 					? JSON.parse(localStorage.getItem("taskGuyList"))
-					: [{ task: "See tasks here!" }];
+					: [{ task: "See tasks here..." }, { task: "Oh such task!" }];
 				this.tasks = storedTasks;
 			}
 		},
@@ -152,16 +150,17 @@
 		margin: auto;
 		width: 80%;
 		background: #fff;
-		box-shadow: 0px 8px 15px 8px rgba(153, 153, 153, 0.486);
-		border: 1px solid rgba(255, 255, 255, 0.37);
+		box-shadow: 0px 8px 15px 8px rgba(104, 96, 96, 0.349);
+		border: 3px outset  #3f474752;
 		border-top: 0px;
 		border-radius: 5px 5px 5px 5px;
 	}
 
 	.task-list-view {
+		z-index: 2;
 		max-height: 400px;
 		overflow: auto;
-		box-shadow: 0px 0px 5px 5px inset rgba(153, 153, 153, 0.486);
+		/* box-shadow: 0px 0px 15px 5px inset  rgba(73, 73, 73, 0.349); */
 		margin: 0px 5px;
 	}
 
@@ -200,6 +199,7 @@
 		cursor: pointer;
 		font-weight: 500;
 		transition: text-decoration 500ms ease-out;
+		max-width: fit-content;
 	}
 	.task-text:hover {
 		text-decoration: underline;
@@ -232,8 +232,8 @@
 		align-items: center;
 		padding-right: 15px;
 		background-color: #434b4b;
-		margin: 0px 1px 0px 1px;
-		border-radius: 5px 5px 0px 0px;
+		margin: 0px 0px 0px 0px;
+		border-radius: 5px 5px 2px 2px;
 	}
 	#submit-button {
 		position: absolute;
@@ -247,7 +247,7 @@
 		font-size: 26px;
 		font-weight: bold;
 		background: rgba(255, 255, 255, 0.8);
-		box-shadow: 0px 0px 3px 2px inset rgba(255, 255, 255, 0.267);
+		box-shadow: 0px 0px 3px 2px inset rgba(255, 255, 255, 0.329);
 		cursor: pointer;
 		transition: background 200ms ease-out, font-weight 200ms ease-out;
 	}
@@ -264,7 +264,7 @@
 		font-family: Varela;
 		background-color: #434b4b;
 		color: #757575;
-		border-radius: 5px 5px 0px 0px;
+		border-radius: 5px 5px 2px 2px;
 		margin-top: 0;
 	}
 
@@ -306,15 +306,15 @@
 		.task-text,
 		#task-input,
 		.main,
-		p,
+
 		body {
 			position: inherit;
 			width: 100%;
-			font-size: 1rem;
+
 		}
 
 		#list-container {
-			width: 80%;
+			min-width: 300px;
 			margin: auto;
 			height: auto;
 
@@ -326,22 +326,32 @@
 		}
 	}
 
-	@media screen and (max-width: 600px) {
+	@media screen and (max-width: 450px) {
 		.taskItem,
-		.task-text,
+
 		#task-input,
 		.messageBox,
 		body {
 			position: inherit;
-			width: 100%;
+			/* width: 100%; */
 			font-size: 1rem;
 			margin: auto;
+			padding: 15px;
 
 			/* padding: 25px; */
 		}
+		#task-input {
+			padding: 15px;
+		}
+
+		.taskItem:hover {
+			font-size: 1.1rem;
+		}
+
 		.main {
 			justify-content: space-around;
-			width: 380px;
+			width: 90%;
+			margin: auto;
 		}
 
 		#list-container {

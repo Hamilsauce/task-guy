@@ -101,8 +101,8 @@
 		}
 
 		#app {
-			width: 80%;
-			margin: 0;
+			width: 90%;
+			margin: auto;
 			height: auto;
 
 			margin-top: 0;
@@ -111,6 +111,35 @@
 		#header-title {
 			width: 100%;
 			margin: 15px auto;
+		}
+	}
+	@media screen and (max-width: 450px) {
+		body {
+			position: relative;
+			width: auto;
+			height: auto;
+			font-size: 1rem;
+			align-items: center;
+			padding: 0;
+			padding-bottom: 15px;
+		}
+
+		#app {
+			width: 100%;
+			margin: auto;
+			height: auto;
+/* justify-content: center; */
+			margin-top: 0;
+		}
+
+		#header-title {
+			width: 100%;
+			margin: 15px auto;
+			font-size: 1.7rem;
+		}
+		nav,
+		nav a {
+			font-size: 1rem;
 		}
 	}
 </style>

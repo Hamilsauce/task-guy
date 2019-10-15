@@ -92,25 +92,37 @@
 	@media screen and (max-width: 600px) {
 		body {
 			box-sizing: border-box;
-			position: relative;
-			display: contents;
+			/* position: relative;
+			display: contents; */
 			width: 100%;
 			margin: 0;
 			padding: 0;
 		}
 		#header-title {
 			margin: 0px auto;
-			font-size: 1.7rem;
+			font-size: 1.3rem;
 		}
 		#about-container {
 			box-sizing: border-box;
-			width: 90%;
+			width: 95%;
 			margin: auto;
+			padding: 5px;
 		}
 		#grid-container {
-			width: 80%;
+			grid-template-columns: repeat(auto-fill, 100px 211px);
+			width: 95%;
+			margin: auto;
 			font-size: 0.89em;
+			justify-content: space-around;
+			padding: 5px;
+			padding-right: 0px;
 		}
+		.grid-card {
+			/* margin: auto; */
+		}
+	.grid-card:nth-child(even) {
+		margin-right: 5px;
+	}
 
 		.taskItem {
 			width: 81%;
