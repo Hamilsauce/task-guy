@@ -67,15 +67,15 @@
 					this.tasks.push({ task: this.task });
 					this.task = "";
 
-					this.storeTasks(this.tasks, "taskGuyList");
-					this.$refs.inputField.focus();
+					this.storeItems(this.tasks, "taskGuyList");
+					// this.$refs.inputField.focus();
 				}
 			},
 
 			deleteTask(id) {
 				this.tasks.splice(id, 1);
 
-				this.storeTasks(this.tasks, "taskGuyList");
+				this.storeItems(this.tasks, "taskGuyList");
 			},
 			toggleItemReveal() {
 				this.revealStatus = !this.revealStatus;
@@ -93,7 +93,7 @@
 				}
 			},
 
-			storeTasks(taskList, itemName) {
+			storeItems(taskList, itemName) {
 				if (!taskList || taskList.length == 0) {
 					// eslint-disable-next-line
 					console.log("No tasks found in list; clearing storage items");
@@ -142,13 +142,13 @@
 		box-sizing: border-box;
 		/* justify-content: flex-; */
 		/* padding: 0px 50px; */
-		max-width: 700px;
+		width: 750px;
 		margin: auto;
 	}
 	#list-container {
 		box-sizing: border-box;
 		margin: auto;
-		width: 80%;
+		width: 750px;
 		background: #fff;
 		box-shadow: 0px 8px 15px 8px rgba(104, 96, 96, 0.349);
 		border: 3px outset  #3f474752;
@@ -236,24 +236,28 @@
 		border-radius: 5px 5px 2px 2px;
 	}
 	#submit-button {
+		box-sizing: border-box;
 		position: absolute;
 		padding: 0px;
+		padding-right: 30px;
 		margin: 0px;
-		width: 30px;
-		height: 30px;
-		border: 2px solid rgba(255, 255, 255, 0.8);
-		border-radius: 50%;
-		color: #394141;
-		font-size: 26px;
-		font-weight: bold;
-		background: rgba(255, 255, 255, 0.8);
-		box-shadow: 0px 0px 3px 2px inset rgba(255, 255, 255, 0.329);
+		/* width: px; */
+		height: 35px;
+		border: 0px solid rgba(255, 255, 255, 0.8);
+		text-align: center;
+		/* border-radius: 50%; */
+			color: #dbdbdb;
+		font-size: 2.3rem;
+		/* font-weight: bold; */
+		background: rgba(255, 255, 255, 0);
+		/* box-shadow: 0px 0px 3px 2px inset rgba(255, 255, 255, 0.329); */
 		cursor: pointer;
 		transition: background 200ms ease-out, font-weight 200ms ease-out;
 	}
 
 	#submit-button:hover {
-		background: rgb(255, 255, 255);
+		/* background: rgb(255, 255, 255); */
+
 		font-weight: bolder;
 	}
 	#task-input {
@@ -347,7 +351,10 @@
 		.taskItem:hover {
 			font-size: 1.1rem;
 		}
-
+		#submit-button {
+			font-size: 2rem;
+			padding-right: 5px;
+		}
 		.main {
 			justify-content: space-around;
 			width: 90%;

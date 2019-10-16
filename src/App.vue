@@ -110,6 +110,7 @@
 
 		#header-title {
 			width: 100%;
+			font-size: 1.5rem;
 			margin: 15px auto;
 		}
 	}
@@ -132,7 +133,7 @@
 			margin-top: 0;
 		}
 
-		#header-title {
+		#header-title n{
 			width: 100%;
 			margin: 15px auto;
 			font-size: 1.7rem;
