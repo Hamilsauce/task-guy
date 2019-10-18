@@ -1,8 +1,8 @@
 <template>
 	<div id="about-container">
-		<p id="header-title">About-Page</p>
+		<p id="header-title">The Library View</p>
 		<div id="content-container">
-			<p>pretending-this-is-a-song-library</p>
+			<p class="subheader">A display of info coupled cards</p>
 			<div id="grid-container">
 				<div class="card-container" id="lazy-star">
 					<div class="title-card">Lazy Star</div>
@@ -52,19 +52,23 @@
 		background: #434b4b;
 		padding: 20px;
 		margin: 0;
-		height:68px;
+		height: 68px;
 		width: 100%;
 		font-size: 1.5em;
 		border-radius: 5px 5px 2px 2px;
-
+		border: 1px solid #434b4b;
 	}
 
-		#content-container {
-			padding: 5px;
-		}
+	#content-container {
+		padding: 5px;
+	}
+
+	.subheader {
+		font-size: 1rem;
+		padding: 0px 10px;
+	}
 
 	#grid-container {
-
 		box-sizing: border-box;
 		display: grid;
 		grid-column-gap: 0px;
@@ -74,7 +78,7 @@
 		margin: 10px 20px;
 		padding: 15px;
 		width: auto;
-		background: #dacb46;
+		background: #dacb46c2;
 		border: 1px solid white;
 		border-radius: 20px;
 		box-shadow: 0px 0px 10px 6px inset rgba(70, 78, 87, 0.3);
@@ -82,15 +86,15 @@
 	}
 
 	/* .grid-card {
-			background: #434b4b;
-			color: aliceblue;
-			border-radius: 5px;
-			padding: 10px;
-			height: 100px;
-			font-size: 1.1rem;
-			border: 2px solid rgb(196, 195, 195);
-			box-shadow: 2px 3px 8px 2px rgba(40, 41, 43, 0.4);
-		} */
+				background: #434b4b;
+				color: aliceblue;
+				border-radius: 5px;
+				padding: 10px;
+				height: 100px;
+				font-size: 1.1rem;
+				border: 2px solid rgb(196, 195, 195);
+				box-shadow: 2px 3px 8px 2px rgba(40, 41, 43, 0.4);
+			} */
 	.card-container {
 		box-sizing: border-box;
 		padding: 1px;
@@ -138,41 +142,44 @@
 		/* margin-right: 20px; */
 	}
 	/* .card-container:nth-child(even) {
-			background: #ccc;
-			color: #000;
-			margin-right: 20px;
-		} */
+				background: #ccc;
+				color: #000;
+				margin-right: 20px;
+			} */
 
 	@media screen and (max-width: 600px) {
 		body {
 			box-sizing: border-box;
 			/* position: relative;
-				display: contents; */
+					display: contents; */
 			width: 100%;
 			margin: 0;
 			padding: 0;
 		}
 		#header-title {
 			margin: 0px auto;
-			font-size: 1.3rem;
+			font-size: 1.2rem;
+			height: auto;
+			padding: 11px 0px 12px 10px;
 		}
 		#about-container {
 			box-sizing: border-box;
-			width: 95%;
+			width: 98%;
 			margin: auto;
+			justify-content: space-around;
 			/* padding: 5px; */
 			/* padding-bottom: 10px; */
 		}
 		#grid-container {
 			grid-template-columns: 1fr;
-			width: 95%;
+			width: 100%;
 			margin: auto;
 			margin-bottom: 10px;
 			font-size: 0.89em;
 			justify-content: space-around;
 			padding: 5px;
 			padding-right: 0px;
-			height: 400px;
+			height: 350px;
 			overflow: auto;
 		}
 		.card-container {

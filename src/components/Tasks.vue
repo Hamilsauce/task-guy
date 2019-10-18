@@ -1,12 +1,12 @@
 <template>
 	<div class="main">
 		<div id="list-container">
-			<form @submit.prevent="addTask" autocomplete="off">
+			<form @submit.prevent="addItem" @focus="addItem" autocomplete="off">
 				<div class="button-container">
 					<input
 						ref="inputField"
 						type="text"
-						placeholder="Enter a task"
+						placeholder="Enter a task here..."
 						v-model="task"
 						v-validate="'min:5'"
 						name="task"
@@ -15,7 +15,7 @@
 					<input type="submit" value="+" id="submit-button" />
 				</div>
 			</form>
-			<div >
+			<div>
 				<ul class="task-list-view">
 					<transition-group
 						name="list"
@@ -23,19 +23,20 @@
 						leave-active-class="animated bounceOutDown"
 					>
 						<li v-for="(data, index) in tasks" :key="index" class="taskItem">
-							<span @click="toggleItemReveal" class="task-text">{{ data.task }}</span>
-							<i class="fa fa-minus-circle" v-on:click="deleteTask(index)"></i>
-							<div v-if="revealStatus === true" id="item-data-display">
-								Bid data yeah
+							<span @click="toggleItemReveal(index)" class="task-text">{{ data.task }}</span>
+							<div v-if="revealStatus === index" id="item-data-display">
+								Big data yeah
 								<p>{{ task }}</p>
 							</div>
+							<i class="fa fa-minus-circle" v-on:click="deleteItem(index)"></i>
 						</li>
 					</transition-group>
 				</ul>
 			</div>
-			<p v-if="tasks.length > 1" class="messageBox">You got some tasks!</p>
+			<!-- <p v-if="tasks.length > 1"  class="messageBox">You got some tasks!</p>
 			<p v-else-if="tasks.length == 1" class="messageBox">You gone and got yourself a task!</p>
-			<p v-else-if="tasks.length < 1" class="messageBox">Not a damn task!</p>
+			<p v-else-if="tasks.length < 1" class="messageBox">Not a damn task!</p>-->
+			<message-center v-bind:actionBrief="actionBrief" :itemCount="itemCount" class="messageBox" />
 		</div>
 		<div v-bind:class="{alert: showAlert}"></div>
 	</div>
@@ -43,47 +44,76 @@
 
 <script>
 	/* eslint-disable */
+	import MessageCenter from "./MessageCenter.vue";
+
 	export default {
 		name: "Tasks",
+		components: {
+			MessageCenter
+		},
 		data() {
 			return {
 				task: "",
 				tasks: [],
-				revealStatus: false,
-				showAlert: false
+				submitState: false,
+				revealStatus: null,
+				showAlert: false,
+				actionBrief: {
+					itemName: "",
+					actionType: "",
+					status: "" //looking for success, error, or none
+				}
 			};
 		},
 		props: {
 			placeholder: Array
 		},
 		methods: {
-			addTask() {
-				let isValid = this.validateTaskInput(this.task);
+			addItem() {
+				this.submitState = true;
+				let isValid = this.validateItemInput(this.task);
 
-				if (isValid === false) {
-					alert("Enter task informatio before submitting.");
-					return;
-				} else {
+				if (isValid === false && this.submitState === true) {
+					// alert("fuck me");
+
+					this.updateActionBrief("", "add", "error");
+					// this.submitState = false;
+					this.$refs.inputField.focus();
+				} else if (isValid === true && this.submitState === true) {
 					this.tasks.push({ task: this.task });
-					this.task = "";
-
 					this.storeItems(this.tasks, "taskGuyList");
-					// this.$refs.inputField.focus();
+					this.updateActionBrief(this.task, "add", "success");
 				}
+
+				this.task = "";
 			},
 
-			deleteTask(id) {
-				this.tasks.splice(id, 1);
-
+			deleteItem(id) {
+				const deletedItem = this.tasks.splice(id, 1);
+				this.submitState = false;
 				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(deletedItem[0].task, "delete", "success");
+				this.task = "";
 			},
-			toggleItemReveal() {
-				this.revealStatus = !this.revealStatus;
+
+			toggleItemReveal(id) {
+				this.submitState = false;
+
+				if (this.revealStatus === id) {
+					this.revealStatus = null;
+				} else {
+					this.revealStatus = id;
+				}
+
+				//special case for the actionBrief - status is not success or error
+				this.revealStatus != null
+					? this.updateActionBrief(this.tasks[id].task, "reveal", "reveal")
+					: this.updateActionBrief(this.tasks[id].task, "reveal", "conceal");
 			},
 
 			/* AUX/UTILITY FUNCTIONS - used in other functions  */
 
-			validateTaskInput(taskText) {
+			validateItemInput(taskText) {
 				let whitespaceTest = taskText.match(/^\s*$/) ? true : false;
 
 				if (taskText.length === 0 || whitespaceTest === true) {
@@ -91,6 +121,13 @@
 				} else {
 					return true;
 				}
+			},
+
+			//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
+			updateActionBrief(name, type, status) {
+				this.actionBrief = { name, type, status };
+
+				return;
 			},
 
 			storeItems(taskList, itemName) {
@@ -109,15 +146,23 @@
 				localStorage.setItem(itemName, JSON.stringify(taskList));
 			},
 
-			initalizeTasks() {
+			initializeItemList() {
 				let storedTasks = localStorage.getItem("taskGuyList")
 					? JSON.parse(localStorage.getItem("taskGuyList"))
 					: [{ task: "See tasks here..." }, { task: "Oh such task!" }];
 				this.tasks = storedTasks;
+				this.$refs.inputField.focus();
+			}
+		},
+		computed: {
+			itemCount() {
+				let count = 0;
+				count = this.tasks.length;
+				return count;
 			}
 		},
 		mounted() {
-			this.initalizeTasks();
+			this.initializeItemList();
 		}
 	};
 	/* eslint-disable */
@@ -140,10 +185,9 @@
 	.main {
 		display: flex;
 		box-sizing: border-box;
-		/* justify-content: flex-; */
-		/* padding: 0px 50px; */
 		width: 750px;
 		margin: auto;
+		padding: 0px 2px 0px 1px;
 	}
 	#list-container {
 		box-sizing: border-box;
@@ -151,16 +195,15 @@
 		width: 750px;
 		background: #fff;
 		box-shadow: 0px 8px 15px 8px rgba(104, 96, 96, 0.349);
-		border: 3px outset  #3f474752;
+		border: 0px outset #3f474752;
 		border-top: 0px;
 		border-radius: 5px 5px 5px 5px;
 	}
 
 	.task-list-view {
 		z-index: 2;
-		max-height: 400px;
+		max-height: 350px;
 		overflow: auto;
-		/* box-shadow: 0px 0px 15px 5px inset  rgba(73, 73, 73, 0.349); */
 		margin: 0px 5px;
 	}
 
@@ -170,8 +213,6 @@
 		padding-bottom: 2px;
 		scrollbar-base-color: yellow;
 		list-style-type: none;
-
-		/* border-bottom: 3px inset #c5c5c5; */
 	}
 
 	.taskItem {
@@ -188,8 +229,6 @@
 		border-radius: 0px 0px 3px 3px;
 		margin: 0px 1px 2px 1px;
 		color: #425e5e;
-		/* transition : padding 500ms ease-out;
-																										transition : border 500ms ease-out; */
 		transition: background-color 800ms ease-out, border 200ms ease-out,
 			padding 250ms ease-out;
 	}
@@ -206,6 +245,8 @@
 	}
 
 	.taskItem:hover {
+		border: 2px solid #404b4b8c;
+		border-right: 0px;
 		border-left: 16px solid #dacb46;
 		color: #304141;
 		font-weight: 500;
@@ -222,7 +263,6 @@
 		margin-top: 10px;
 		color: gray;
 		border-top: 2px solid #cccccc;
-
 		border-radius: 0px 0px 5px 5px;
 	}
 
@@ -241,16 +281,12 @@
 		padding: 0px;
 		padding-right: 30px;
 		margin: 0px;
-		/* width: px; */
 		height: 35px;
 		border: 0px solid rgba(255, 255, 255, 0.8);
 		text-align: center;
-		/* border-radius: 50%; */
-			color: #dbdbdb;
+		color: #dbdbdb;
 		font-size: 2.3rem;
-		/* font-weight: bold; */
 		background: rgba(255, 255, 255, 0);
-		/* box-shadow: 0px 0px 3px 2px inset rgba(255, 255, 255, 0.329); */
 		cursor: pointer;
 		transition: background 200ms ease-out, font-weight 200ms ease-out;
 	}
@@ -265,7 +301,7 @@
 		border: 0;
 		padding: 20px;
 		font-size: 1.5em;
-		font-family: Varela;
+		font-family: Montserrat;
 		background-color: #434b4b;
 		color: #757575;
 		border-radius: 5px 5px 2px 2px;
@@ -310,11 +346,9 @@
 		.task-text,
 		#task-input,
 		.main,
-
 		body {
 			position: inherit;
 			width: 100%;
-
 		}
 
 		#list-container {
@@ -332,7 +366,6 @@
 
 	@media screen and (max-width: 450px) {
 		.taskItem,
-
 		#task-input,
 		.messageBox,
 		body {
@@ -357,8 +390,10 @@
 		}
 		.main {
 			justify-content: space-around;
-			width: 90%;
+			width: 99%;
+
 			margin: auto;
+			margin-top: 0;
 		}
 
 		#list-container {
@@ -367,6 +402,7 @@
 			height: auto;
 
 			margin: auto;
+			margin-top: 0;
 		}
 		.taskItem {
 			width: auto;

@@ -1,22 +1,61 @@
 <template>
 	<div id="app">
+		<introduction-modal v-if="displayModal === true" v-bind:username="username" @add:username="updatedUsername" />
 		<p id="header-title">Mr. Task Guy</p>
+		<span id="user-display">Current user: {{ this.username }}</span>
 		<nav>
 			<router-link to="/">Home</router-link>
-			<router-link to="/about">About</router-link>
+			<router-link to="/about">Library</router-link>
 		</nav>
 		<router-view />
 	</div>
 </template>
 
 <script>
+import IntroductionModal from './components/IntroductionModal.vue'
+
 	export default {
-		name: "app"
-	};
+		name: "app",
+		components: {
+			IntroductionModal
+		},
+		data () {
+			return {
+				username: '',
+				userDisplay: 'Current user: ' + this.username,
+				displayModal: true,
+			}
+		},
+
+		methods: {
+			updatedUsername(username) {
+				console.log('event works!');
+				this.username = username;
+
+				localStorage.setItem('taskGuyUsername', this.username);
+			},
+			checkForExistinguser(){
+				let existingUser = localStorage.getItem("taskGuyUsername");
+
+				if (existingUser) {
+					this.username = existingUser;
+					this.displayModal = false;
+				} else {
+					this.displayModal = true;
+
+				}
+			}
+		},
+
+		mounted() {
+			this.checkForExistinguser()
+
+		}
+	}
 </script>
 
 <style>
-	@import url("https://fonts.googleapis.com/css?family=Varela&display=swap");
+	@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 
 	.no-zoom {
 		touch-action: manipulation;
@@ -24,9 +63,9 @@
 
 	body {
 		background-color: #eeeeee;
-		font-family: "Varela", sans-serif;
+		font-family: "Montserrat", sans-serif;
 		/* display: grid;
-			grid-template-rows: auto; */
+								grid-template-rows: auto; */
 		justify-items: center;
 		padding-top: 50px;
 		touch-action: manipulation;
@@ -34,7 +73,7 @@
 	body,
 	html {
 		position: relative;
-		margin: 0;
+		margin: auto;
 		height: 100%;
 		user-select: none;
 		touch-action: manipulation;
@@ -54,17 +93,29 @@
 
 		margin: 0;
 		margin-bottom: 20px;
-		border-bottom: 2px solid rgba(153, 153, 153, 0.356);
+		border-bottom: 1px solid rgba(153, 153, 153, 0.356);
+	}
+
+	#user-display {
+		box-sizing: border-box;
+		padding: 0;
+		padding-left: 5px;
+		margin: 0;
 	}
 
 	nav {
 		padding: 20px 10px 5px 5px;
 		width: 70%;
-		margin: auto;
+		display: flex;
+		justify-content: flex-start;
 		margin-bottom: 0;
-		padding-bottom: 3px;
+		padding-bottom: 0px;
+		/* margin: auto; */
+		border-bottom: 1px solid #434b4b;
 	}
 	nav a {
+		border: 2px solid #434b4b;
+
 		padding: 3px 20px 2px 20px;
 		text-decoration: none;
 		background: #434b4b;
@@ -77,23 +128,30 @@
 		color: #dbdbdb;
 		font-weight: normal;
 		font-size: 1.2rem;
-		margin-right: 5px;
+		margin-right: 1px;
 		margin-bottom: 0px;
-		box-shadow: 0px 0px 2px 2px rgba(153, 153, 153, 0.267);
+
+		background: #53595c;
+		border: 0px solid #64a4be54;
+		color: #c7d6d6;
+
+		/* margin-left: 0px; */
+
+		/* box-shadow: 0px 0px 2px 2px rgba(153, 153, 153, 0.267); */
 	}
 
 	nav a:focus {
-		background: #dce6eb;
-		border: 1px solid #64a5be;
-		color: #434b4b;
-		border-bottom: 1px;
+		background: #434b4b;
+		border: 0px solid #64a5be;
+		color: #dbdbdb;
+		border-bottom: 0px solid #434b4b;
 	}
 
 	@media screen and (max-width: 600px) {
 		body {
 			position: relative;
 			width: auto;
-			height: auto;
+			height: 100%;
 			font-size: 1rem;
 			align-items: center;
 			padding: 0;
@@ -103,44 +161,50 @@
 		#app {
 			width: 90%;
 			margin: auto;
-			height: auto;
+			height: 100%;
 
 			margin-top: 0;
 		}
 
 		#header-title {
-			width: 100%;
+			width: 95%;
 			font-size: 1.5rem;
 			margin: 15px auto;
+			margin-top: 0;
+			padding-top: 15px;
 		}
 	}
 	@media screen and (max-width: 450px) {
 		body {
 			position: relative;
-			width: auto;
-			height: auto;
+			width: 100%;
+			height: 100%;
 			font-size: 1rem;
 			align-items: center;
 			padding: 0;
-			padding-bottom: 15px;
+			padding-bottom: 0px;
 		}
 
 		#app {
 			width: 100%;
 			margin: auto;
-			height: auto;
-/* justify-content: center; */
+			height: 100%;
+			/* justify-content: center; */
 			margin-top: 0;
+			margin-bottom: 0;
 		}
 
-		#header-title n{
-			width: 100%;
-			margin: 15px auto;
+		#header-title n {
+			width: 95%;
+			/* margin: auto; */
+			margin-top: 0;
+			padding-left: 10px;
 			font-size: 1.7rem;
 		}
 		nav,
 		nav a {
 			font-size: 1rem;
+			margin-bottom: 0;
 		}
 	}
 </style>
