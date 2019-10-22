@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<div id="list-container">
-			<form @submit.prevent="addItem" @focus="addItem" autocomplete="off">
+			<form @submit.prevent="addItem"  autocomplete="off">
 				<div class="button-container">
 					<input
 						ref="inputField"
@@ -15,8 +15,8 @@
 					<input type="submit" value="+" id="submit-button" />
 				</div>
 			</form>
-			<div>
-				<ul class="task-list-view">
+			<div class="task-list-view">
+				<ul >
 					<transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
@@ -78,7 +78,7 @@
 
 					this.updateActionBrief("", "add", "error");
 					// this.submitState = false;
-					this.$refs.inputField.focus();
+					// this.$refs.inputField.focus();
 				} else if (isValid === true && this.submitState === true) {
 					this.tasks.push({ task: this.task });
 					this.storeItems(this.tasks, "taskGuyList");
@@ -151,7 +151,7 @@
 					? JSON.parse(localStorage.getItem("taskGuyList"))
 					: [{ task: "See tasks here..." }, { task: "Oh such task!" }];
 				this.tasks = storedTasks;
-				this.$refs.inputField.focus();
+				// this.$refs.inputField.focus();
 			}
 		},
 		computed: {
@@ -202,7 +202,7 @@
 
 	.task-list-view {
 		z-index: 2;
-		max-height: 350px;
+		max-height: 300px;
 		overflow: auto;
 		margin: 0px 5px;
 	}
@@ -233,6 +233,16 @@
 			padding 250ms ease-out;
 	}
 
+	.taskItem:hover {
+		border: 2px solid #404b4b8c;
+		border-right: 0px;
+		border-left: 16px solid #dacb46;
+		color: #304141;
+		font-weight: 500;
+		font-size: 1.3em;
+		background-color: #dce6eb;
+		padding-left: 6px;
+	}
 	.task-text {
 		text-decoration: none;
 		cursor: pointer;
@@ -244,16 +254,6 @@
 		text-decoration: underline;
 	}
 
-	.taskItem:hover {
-		border: 2px solid #404b4b8c;
-		border-right: 0px;
-		border-left: 16px solid #dacb46;
-		color: #304141;
-		font-weight: 500;
-		font-size: 1.5em;
-		background-color: #dce6eb;
-		padding-left: 26px;
-	}
 
 	.messageBox {
 		text-align: center;

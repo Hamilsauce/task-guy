@@ -62,7 +62,6 @@
 							}
 						}
 						break;
-					//default
 					default:
 						if (this.itemCount > 1) {
 							output = `You got ${this.itemCount} tasks!`;
@@ -77,9 +76,7 @@
 			}
 		},
 		computed: {
-			postMessage(brief) {
-			
-			}
+
 		},
 		watch: {},
 
