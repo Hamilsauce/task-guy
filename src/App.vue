@@ -1,6 +1,10 @@
 <template>
 	<div id="app">
-		<introduction-modal v-if="displayModal === true" v-bind:username="username" @add:username="updatedUsername" />
+		<introduction-modal
+			v-if="displayModal === true"
+			v-bind:username="username"
+			@add:username="updatedUsername"
+		/>
 		<p id="header-title">Mr. Task Guy</p>
 		<span id="user-display">Current user: {{ this.username }}</span>
 		<nav>
@@ -12,29 +16,29 @@
 </template>
 
 <script>
-import IntroductionModal from './components/IntroductionModal.vue'
+	import IntroductionModal from "./components/IntroductionModal.vue";
 
 	export default {
 		name: "app",
 		components: {
 			IntroductionModal
 		},
-		data () {
+		data() {
 			return {
-				username: '',
-				userDisplay: 'Current user: ' + this.username,
-				displayModal: true,
-			}
+				username: "",
+				userDisplay: "Current user: " + this.username,
+				displayModal: true
+			};
 		},
 
 		methods: {
 			updatedUsername(username) {
-				console.log('event works!');
+				console.log("event works!");
 				this.username = username;
 
-				localStorage.setItem('taskGuyUsername', this.username);
+				localStorage.setItem("taskGuyUsername", this.username);
 			},
-			checkForExistinguser(){
+			checkForExistinguser() {
 				let existingUser = localStorage.getItem("taskGuyUsername");
 
 				if (existingUser) {
@@ -42,16 +46,14 @@ import IntroductionModal from './components/IntroductionModal.vue'
 					this.displayModal = false;
 				} else {
 					this.displayModal = true;
-
 				}
 			}
 		},
 
 		mounted() {
-			this.checkForExistinguser()
-
+			this.checkForExistinguser();
 		}
-	}
+	};
 </script>
 
 <style>
@@ -65,9 +67,8 @@ import IntroductionModal from './components/IntroductionModal.vue'
 		background-color: #eeeeee;
 		font-family: "Montserrat", sans-serif;
 		/* display: grid;
-								grid-template-rows: auto; */
+									grid-template-rows: auto; */
 		justify-items: center;
-		padding-top: 50px;
 		touch-action: manipulation;
 	}
 	body,
@@ -83,6 +84,7 @@ import IntroductionModal from './components/IntroductionModal.vue'
 		margin: auto;
 		margin-top: 0;
 		padding: 0;
+		padding-top: 25px;
 	}
 
 	#header-title {
