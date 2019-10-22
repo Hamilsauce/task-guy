@@ -67,7 +67,7 @@
 		background-color: #eeeeee;
 		font-family: "Montserrat", sans-serif;
 		/* display: grid;
-									grid-template-rows: auto; */
+										grid-template-rows: auto; */
 		justify-items: center;
 		touch-action: manipulation;
 	}
@@ -113,7 +113,7 @@
 		margin-bottom: 0;
 		padding-bottom: 0px;
 		/* margin: auto; */
-		border-bottom: 1px solid #434b4b;
+		/* border-bottom: 0px solid #434b4b; */
 	}
 	nav a {
 		border: 2px solid #434b4b;

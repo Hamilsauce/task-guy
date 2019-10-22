@@ -204,7 +204,7 @@
 		z-index: 2;
 		max-height: 300px;
 		overflow: auto;
-		margin: 0px 0px;
+		margin: 0px 2px;
 	}
 
 	ul {
