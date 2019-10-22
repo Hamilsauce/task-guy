@@ -205,7 +205,6 @@
 		max-height: 300px;
 		overflow: auto;
 		margin: 0px 2px;
-		border: 1px solid #434b4b;
 	}
 
 	ul {
@@ -225,7 +224,7 @@
 		padding-right: 20px;
 		font-size: 1.5em;
 		background-color: #d9dee0;
-		border: 2px solid #ebebeb25;
+		border: 1px solid #fafafada;
 		border-bottom: 1px solid rgb(196, 194, 194);
 		border-left: 10px solid #64a5be;
 		border-radius: 0px 0px 3px 3px;
@@ -275,6 +274,7 @@
 		background-color: #434b4b;
 		margin: 0px 0px 0px 0px;
 		border-radius: 5px 5px 2px 2px;
+		border: 1px solid #434b4b;
 	}
 	#submit-button {
 		box-sizing: border-box;
