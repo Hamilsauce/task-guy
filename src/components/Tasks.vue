@@ -205,6 +205,7 @@
 		max-height: 300px;
 		overflow: auto;
 		margin: 0px 2px;
+		border: 1px solid #434b4b;
 	}
 
 	ul {
@@ -224,6 +225,7 @@
 		padding-right: 20px;
 		font-size: 1.5em;
 		background-color: #d9dee0;
+		border: 2px solid #ebebeb25;
 		border-bottom: 1px solid rgb(196, 194, 194);
 		border-left: 10px solid #64a5be;
 		border-radius: 0px 0px 3px 3px;
