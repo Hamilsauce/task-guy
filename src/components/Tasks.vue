@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<div id="list-container">
-			<form @submit.prevent="addItem"  autocomplete="off">
+			<form @submit.prevent="addItem" autocomplete="off">
 				<div class="button-container">
 					<input
 						ref="inputField"
@@ -16,7 +16,7 @@
 				</div>
 			</form>
 			<div class="task-list-view">
-				<ul >
+				<ul>
 					<transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
@@ -239,7 +239,7 @@
 		border-left: 16px solid #dacb46;
 		color: #304141;
 		font-weight: 500;
-		font-size: 1.3em;
+		font-size: 1.5em;
 		background-color: #dce6eb;
 		padding-left: 6px;
 	}
@@ -253,7 +253,6 @@
 	.task-text:hover {
 		text-decoration: underline;
 	}
-
 
 	.messageBox {
 		text-align: center;
