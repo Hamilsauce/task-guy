@@ -5,7 +5,7 @@
 			v-bind:username="username"
 			@add:username="updatedUsername"
 		/>
-		<p id="header-title">Mr. Task Guy</p>
+		<p id="app-header">Mr. Task Guy</p>
 		<span id="user-display">Current user: {{ this.username }}</span>
 		<nav>
 			<router-link to="/">Home</router-link>
@@ -84,10 +84,10 @@
 		margin: auto;
 		margin-top: 0;
 		padding: 0;
-		padding-top: 25px;
+
 	}
 
-	#header-title {
+	#app-header {
 		color: #698894;
 		/* font-weight: bold; */
 		font-size: 2.2rem;
@@ -168,7 +168,7 @@
 			margin-top: 0;
 		}
 
-		#header-title {
+		#app-header {
 			width: 95%;
 			font-size: 1.5rem;
 			margin: 15px auto;
@@ -196,7 +196,7 @@
 			margin-bottom: 0;
 		}
 
-		#header-title n {
+		#app-header n {
 			width: 95%;
 			/* margin: auto; */
 			margin-top: 0;
