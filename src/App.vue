@@ -1,12 +1,12 @@
 <template>
 	<div id="app">
 		<introduction-modal
-			v-if="displayModal === true"
+			v-if="displayModal == true"
 			v-model="username"
 			@add:username="updatedUsername"
 		/>
 		<p id="app-header">Mr. Task Guy</p>
-		<span id="user-display">Current user: {{ this.username }}</span>
+		<span id="user-display" @click="displayModal = true">Current user: {{ this.username }}</span>
 		<nav>
 			<router-link to="/">Home</router-link>
 			<router-link to="/about">Library</router-link>
@@ -103,6 +103,9 @@
 		padding: 0;
 		padding-left: 5px;
 		margin: 0;
+		margin-right: 20px;
+		cursor: pointer;
+		float: right;
 	}
 
 	nav {
@@ -207,6 +210,11 @@
 		nav a {
 			font-size: 1rem;
 			margin-bottom: 0;
+		}
+
+		#user-display {
+			font-size: 0.9em;
+			margin-right: 10px;
 		}
 	}
 </style>
