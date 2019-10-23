@@ -2,7 +2,7 @@
 	<div id="app">
 		<introduction-modal
 			v-if="displayModal === true"
-			v-bind:username="username"
+			v-model="username"
 			@add:username="updatedUsername"
 		/>
 		<p id="app-header">Mr. Task Guy</p>
@@ -11,7 +11,7 @@
 			<router-link to="/">Home</router-link>
 			<router-link to="/about">Library</router-link>
 		</nav>
-		<router-view />
+		<router-view></router-view>
 	</div>
 </template>
 
@@ -25,7 +25,7 @@
 		},
 		data() {
 			return {
-				username: "",
+				username: '',
 				userDisplay: "Current user: " + this.username,
 				displayModal: true
 			};

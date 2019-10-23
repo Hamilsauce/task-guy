@@ -9,7 +9,8 @@
 		name: "MessageCenter",
 		props: {
 			actionBrief: Object,
-			itemCount: Number
+			itemCount: Number,
+			currentUser: String
 		},
 		data() {
 			return {
@@ -18,19 +19,13 @@
 		},
 
 		methods: {
+			
+
 			evaluateBrief(brief) {
 				const { name, type, status } = brief;
 				let output = "";
 				switch (type) {
-					// case 'initialize':
-					//     if(status === 'success') {
-					//         //set formatting, change wording
-					//     } else if(status === 'error') {
-					//         //set formatting, change wording
-					//     } else {
-					//         //no status included...will depend on action type
-					//     }
-					//     break;
+
 					case "add":
 						if (status === "success") {
 							output = `The item ${name} was successfully ${type}ed`;
@@ -72,7 +67,9 @@
 						}
 						break;
 				}
+
 				return output;
+
 			}
 		},
 		computed: {

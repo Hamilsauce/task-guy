@@ -22,13 +22,15 @@
 						enter-active-class="animated bounceInUp"
 						leave-active-class="animated bounceOutDown"
 					>
-						<li v-for="(data, index) in tasks" :key="index" class="taskItem">
-							<span @click="toggleItemReveal(index)" class="task-text">{{ data.task }}</span>
-							<div v-if="revealStatus === index" id="item-data-display">
-								Big data yeah
-								<p>{{ task }}</p>
+						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
+							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
+							<div v-if="revealStatus === id" id="item-data-display">
+
+								<input v-if="editDetails === true || !task.details" type="text" v-model="task.details">
+								<p v-else @click="editDetails = true">{{ task.details }} </p>
+								<input v-if="editDetails === true || !task.details" type="button" value="save" @click="editDetails = false">
 							</div>
-							<i class="fa fa-minus-circle" v-on:click="deleteItem(index)"></i>
+							<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
 						</li>
 					</transition-group>
 				</ul>
@@ -53,6 +55,7 @@
 		},
 		data() {
 			return {
+				editDetails: true,
 				task: "",
 				tasks: [],
 				submitState: false,
@@ -66,7 +69,8 @@
 			};
 		},
 		props: {
-			placeholder: Array
+			placeholder: Array,
+			username: String
 		},
 		methods: {
 			addItem() {
@@ -74,13 +78,17 @@
 				let isValid = this.validateItemInput(this.task);
 
 				if (isValid === false && this.submitState === true) {
-					// alert("fuck me");
+
 
 					this.updateActionBrief("", "add", "error");
 					// this.submitState = false;
 					// this.$refs.inputField.focus();
 				} else if (isValid === true && this.submitState === true) {
-					this.tasks.push({ task: this.task });
+					this.tasks.push({
+						id: this.tasks.length + 1,
+						name: this.task,
+						details: this.task.details
+						 });
 					this.storeItems(this.tasks, "taskGuyList");
 					this.updateActionBrief(this.task, "add", "success");
 				}
@@ -201,10 +209,11 @@
 	}
 
 	.task-list-view {
-		z-index: 2;
+		z-id: 2;
 		max-height: 300px;
 		overflow: auto;
 		margin: 0px 2px;
+
 	}
 
 	ul {
@@ -274,7 +283,7 @@
 		background-color: #434b4b;
 		margin: 0px 0px 0px 0px;
 		border-radius: 5px 5px 2px 2px;
-		border: 1px solid #434b4b;
+
 	}
 	#submit-button {
 		box-sizing: border-box;
