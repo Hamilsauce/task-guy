@@ -1,0 +1,223 @@
+<template>
+    <div class="main">
+        <div id="list-container">
+            <form @submit.prevent="addItem" autocomplete="off">
+				<div class="button-container">
+                <input
+                    ref="inputField"
+                    type="text"
+                    placeholder="Enter a task here..."
+                    v-model="task"
+                    v-validate="'min:5'"
+                    name="task"
+                    id="task-input"
+                />
+                <input type="submit" value="+" id="submit-button" />
+            </div>
+			</form>
+        <div class="task-list-view">
+            <ul>
+                <transition-group
+                    name="list"
+                    enter-active-class="animated bounceInUp"
+                    leave-active-class="animated bounceOutDown"
+                >
+                    <li v-for="(task, id) in tasks" : key="id" class="taskItem">
+							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
+                <div v-if="revealStatus === id" class="item-data-display">
+                    <input
+                        class="details-input"
+                        v-if="editDetails === true || !task.details"
+                        ref="detailsInput"
+                        type="text"
+                        v-model="task.details"
+									@keypress.enter="updateItem(id)"
+                />
+								<p v-else @click="editDetails = true">{{ task.details }}</p>
+                <input
+                    class="details-save"
+                    v-if="editDetails === true || !task.details"
+                    type="button"
+                    value="OK"
+									@click="updateItem(id)"
+            />
+							</div>
+            <i class="fa fa-minus-circle" v-on: click="deleteItem(id)"></i>
+						</li>
+					</transition-group>
+				</ul >
+			</div >
+			< !-- < p v -if= "tasks.length > 1"  class="messageBox" > You got some tasks!</p >
+    <p v-else-if="tasks.length == 1" class="messageBox">You gone and got yourself a task!</p>
+    <p v-else-if="tasks.length < 1" class="messageBox">Not a damn task!</p>-->
+        <message-center v-bind: actionBrief="actionBrief" : itemCount="itemCount" class="messageBox" />
+		</div >
+    <div v-bind: class="{alert: showAlert}"></div>
+	</div >
+</template >
+
+    <script>
+        /* eslint-disable */
+        import MessageCenter from "./MessageCenter.vue";
+
+	export default {
+            name: "Tasks",
+		components: {
+            MessageCenter
+        },
+		data() {
+			return {
+            editDetails: true,
+        task: "",
+        tasks: [],
+        submitState: false,
+        revealStatus: null,
+        showAlert: false,
+				actionBrief: {
+            itemName: "",
+        actionType: "",
+        status: "" //looking for success, error, or none
+    }
+};
+},
+		props: {
+            placeholder: Array,
+        username: String
+    },
+		methods: {
+            addItem() {
+            this.submitState = true;
+        let isValid = this.validateItemInput(this.task);
+
+				if (isValid === false && this.submitState === true) {
+            this.updateActionBrief("", "add", "error");
+        // this.submitState = false;
+        // this.$refs.inputField.focus();
+				} else if (isValid === true && this.submitState === true) {
+            this.tasks.push({
+                id: this.tasks.length + 1,
+                name: this.task,
+                details: this.task.details
+            });
+
+        this.storeItems(this.tasks, "taskGuyList");
+        this.updateActionBrief(this.task, "add", "success");
+    }
+
+    this.task = "";
+},
+
+			deleteItem(id) {
+				const deletedItem = this.tasks.splice(id, 1);
+        this.submitState = false;
+        this.storeItems(this.tasks, "taskGuyList");
+        this.updateActionBrief(deletedItem[0].name, "delete", "success");
+        this.task = "";
+    },
+
+			toggleItemReveal(id) {
+            this.submitState = false;
+
+				if (this.revealStatus === id) {
+            this.revealStatus = null;
+				} else {
+            this.revealStatus = id;
+        this.editDetails = false;
+    }
+
+    //special case for the actionBrief - status is not success or error
+    this.revealStatus != null
+        ? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
+        : this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+},
+
+			updateItem(id) {
+            this.editDetails = false;
+        this.storeItems(this.tasks, "taskGuyList");
+        this.updateActionBrief(this.tasks[id].name, "update", "success");
+    },
+
+    /* AUX/UTILITY FUNCTIONS - used in other functions  */
+
+			validateItemInput(taskText) {
+            let whitespaceTest = taskText.trim() === !taskText ? true : false;
+
+				if (taskText.length === 0 || whitespaceTest === true) {
+					return false;
+				} else {
+					return true;
+    }
+},
+
+//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
+			updateActionBrief(name, type, status) {
+            this.actionBrief = { name, type, status };
+
+        return;
+    },
+
+			storeItems(taskList, itemName) {
+            this.username ? itemName = `${itemName}_${this.username}` : itemName;
+        console.log(this.username);
+
+
+				if (!taskList || taskList.length == 0) {
+            // eslint-disable-next-line
+            console.log("No tasks found in list; clearing storage items");
+        localStorage.removeItem(itemName);
+        return;
+				} else if (!itemName) {
+            // eslint-disable-next-line
+            console.error(
+                "No item name supplied for storage reference; tasks not saved!"
+            );
+        return;
+    }
+				if (this.username) {
+            itemName = `${itemName}_${this.username}`;
+    }
+
+    localStorage.setItem(itemName, JSON.stringify(taskList));
+},
+
+			initializeItemList() {
+            let storedTasks = [];
+        let itemName = "taskGuyList";
+				if (this.username) {
+            itemName = `${itemName}_${this.username}`;
+					if (localStorage.getItem(itemName)) {
+            storedTasks = JSON.parse(localStorage.getItem(itemName));
+					} else if (localStorage.getItem("taskGuyList")) {
+            storedTasks = JSON.parse(localStorage.getItem("taskGuyList"));
+					} else {
+            storedTasks = [
+                { name: "See tasks here..." },
+                { name: "Oh such task!" }
+            ];
+    }
+				} else {
+            let storedTasks = localStorage.getItem("taskGuyList")
+            ? localStorage.getItem("taskGuyList")
+						: [{name: "See tasks here..." }, {name: "Oh such task!" }];
+}
+
+this.tasks = storedTasks;
+// this.$refs.inputField.focus();
+}
+},
+		computed: {
+            itemCount() {
+            let count = 0;
+        count = this.tasks.length;
+        return count;
+    }
+},
+		mounted() {
+            this.initializeItemList();
+    }
+};
+/* eslint-disable */
+</script>
+
+
+    <style sco</style></style>ped>

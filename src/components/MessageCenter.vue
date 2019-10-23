@@ -19,7 +19,7 @@
 		},
 
 		methods: {
-			
+
 
 			evaluateBrief(brief) {
 				const { name, type, status } = brief;
@@ -55,6 +55,16 @@
 							} else {
 								output = "Not a damn task to your name!";
 							}
+						}
+						break;
+					case "update": //item reveal toggle is turned on...display name of item
+					if (status === "success") {
+							output = `The item ${name} was successfully ${type}d`;
+						} else if (status === "error") {
+							output = `The item ${name} was not ${type}d`;
+						} else {
+							//no status included...will depend on action type
+						
 						}
 						break;
 					default:

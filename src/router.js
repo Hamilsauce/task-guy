@@ -10,7 +10,8 @@ export default new Router({
         {
             path: '/',
             name: 'tasks',
-            component: Tasks
+            component: Tasks,
+            props: true
         },
         {
             path: '/about',

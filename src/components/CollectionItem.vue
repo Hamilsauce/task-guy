@@ -18,11 +18,39 @@
 			};
 		},
 		props: {
-			item: Object,
+			item: Object
 		},
 		methods: {
-			toggleReveal() {
-				revealStatus = !revealStatus;
+			toggleItemReveal(id) {
+				this.submitState = false;
+
+				if (this.revealStatus === id) {
+					this.revealStatus = null;
+				} else {
+					this.revealStatus = id;
+					this.editDetails = false;
+				}
+
+				//special case for the actionBrief - status is not success or error
+				this.revealStatus != null
+					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
+					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+			},
+
+			validateItemInput(taskText) {
+				let whitespaceTest = taskText.trim() === !taskText ? true : false;
+
+				if (taskText.length === 0 || whitespaceTest === true) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+
+			updateItem(id) {
+				this.editDetails = false;
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(this.tasks[id].name, "update", "success");
 			}
 		}
 	};

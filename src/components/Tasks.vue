@@ -24,11 +24,23 @@
 					>
 						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
 							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
-							<div v-if="revealStatus === id" id="item-data-display">
-
-								<input v-if="editDetails === true || !task.details" type="text" v-model="task.details">
-								<p v-else @click="editDetails = true">{{ task.details }} </p>
-								<input v-if="editDetails === true || !task.details" type="button" value="save" @click="editDetails = false">
+							<div v-if="revealStatus === id" class="item-data-display">
+								<input
+									class="details-input"
+									v-if="editDetails === true || !task.details"
+									ref="detailsInput"
+									type="text"
+									v-model="task.details"
+									@keypress.enter="updateItem(id)"
+								/>
+								<p v-else @click="editDetails = true">{{ task.details }}</p>
+								<input
+									class="details-save"
+									v-if="editDetails === true || !task.details"
+									type="button"
+									value="OK"
+									@click="updateItem(id)"
+								/>
 							</div>
 							<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
 						</li>
@@ -78,8 +90,6 @@
 				let isValid = this.validateItemInput(this.task);
 
 				if (isValid === false && this.submitState === true) {
-
-
 					this.updateActionBrief("", "add", "error");
 					// this.submitState = false;
 					// this.$refs.inputField.focus();
@@ -88,7 +98,8 @@
 						id: this.tasks.length + 1,
 						name: this.task,
 						details: this.task.details
-						 });
+					});
+
 					this.storeItems(this.tasks, "taskGuyList");
 					this.updateActionBrief(this.task, "add", "success");
 				}
@@ -100,7 +111,7 @@
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
 				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(deletedItem[0].task, "delete", "success");
+				this.updateActionBrief(deletedItem[0].name, "delete", "success");
 				this.task = "";
 			},
 
@@ -111,18 +122,25 @@
 					this.revealStatus = null;
 				} else {
 					this.revealStatus = id;
+					this.editDetails = false;
 				}
 
 				//special case for the actionBrief - status is not success or error
 				this.revealStatus != null
-					? this.updateActionBrief(this.tasks[id].task, "reveal", "reveal")
-					: this.updateActionBrief(this.tasks[id].task, "reveal", "conceal");
+					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
+					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+			},
+
+			updateItem(id) {
+				this.editDetails = false;
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(this.tasks[id].name, "update", "success");
 			},
 
 			/* AUX/UTILITY FUNCTIONS - used in other functions  */
 
 			validateItemInput(taskText) {
-				let whitespaceTest = taskText.match(/^\s*$/) ? true : false;
+				let whitespaceTest = taskText.trim() === !taskText ? true : false;
 
 				if (taskText.length === 0 || whitespaceTest === true) {
 					return false;
@@ -209,11 +227,9 @@
 	}
 
 	.task-list-view {
-		z-id: 2;
 		max-height: 300px;
 		overflow: auto;
 		margin: 0px 2px;
-
 	}
 
 	ul {
@@ -283,8 +299,43 @@
 		background-color: #434b4b;
 		margin: 0px 0px 0px 0px;
 		border-radius: 5px 5px 2px 2px;
+	}
+
+	.item-data-display {
+		cursor: pointer;
+	}
+
+	.details-input{
+		display:inline-block;
+		/* position: sticky; */
+		margin: 3px;
+		padding: 3px;
+		padding-left: 5px;
+		color: #425e5e;
+		font-size: 1em;
+		border: 2px solid white;
+		border-radius: 10px;
+
+
 
 	}
+	.details-save {
+		/* z-index: 2; */
+		display: inline;
+		padding: 5px 7px;
+		/* margin-top: 5px; */
+		margin: 2px;
+		font-weight: 600;
+		font-size: 0.8rem;
+		background: #434b4be7;
+		color: #e7e7e7;
+		border: 1px solid hsl(0, 0%, 100%);
+		border-radius: 66%;
+		/* box-shadow: 0px 1px 1px 0px #ffffff83 */
+		cursor: pointer;
+
+	}
+
 	#submit-button {
 		box-sizing: border-box;
 		position: absolute;
@@ -347,8 +398,12 @@
 		}
 	}
 	i {
-		float: right;
+		/* float: right; */
 		cursor: pointer;
+	}
+	i:hover {
+		/* float: right; */
+		color: rgb(231, 65, 54);
 	}
 
 	@media screen and (max-width: 600px) {
@@ -416,6 +471,12 @@
 		}
 		.taskItem {
 			width: auto;
+		}
+
+		.details-save{
+			font-size: 0.7rem;
+			font-weight: 500;
+			padding: 5px 5px;
 		}
 	}
 </style>
