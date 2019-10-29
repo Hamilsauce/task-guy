@@ -7,7 +7,7 @@
     <script></script>
 <style type="text/css" id="dcoder_stylesheet">
 body {
-	color: rgba(83, 83, 83, 0.9);; 
+	color: rgba(83, 83, 83, 0.9);;
 	font-size: 1.2em;
 }
 
@@ -53,7 +53,7 @@ form {
 	font-size: 1.1em;
 	height: 26px;
 	border: 1px solid rgba(200, 150, 75, 0.7);
-	color: rgba(83, 83, 83, 0.7);; 
+	color: rgba(83, 83, 83, 0.7);;
 	border-radius: 5px;
 }
 
@@ -78,44 +78,44 @@ form {
 		<div id="lib-form">
 			<h2 id="formHeader">The Book Form from Hell!</h2>
 			<form v-if="!showForm" @submit.prevent="addNewBook">
-			
-			<hr>	
+
+			<hr>
 			<label class="inLabel" for="titleIn">Book Title</label><br>
 			<input v-model="newBook.title" id="titleIn" name="titleIn" class="textField" type="text"><br>
 			<label class="inLabel" for="authorIn">Author</label><br>
-			<input v-model="newBook.author" id="authorIn" name="authorIn" class="textField" type="text"><br>			
+			<input v-model="newBook.author" id="authorIn" name="authorIn" class="textField" type="text"><br>
 			<label class="inLabel" for="yearIn">Year Published</label><br>
 			<input v-model="newBook.year" id="yearIn" name="yearIn" class="textField" type="text"><br>
 			<input type="submit" id="submit-button" value="Add New Book">
 		</form>
 		<br>
-	<!--</div>	
+	<!--</div>
 
 	<div id="lib-list">
 	-->
 		<ul id="bookList">
-			<li v-for="book in myBooks">{{ book }}</li>	
+			<li v-for="book in myBooks">{{ book }}</li>
 		</ul>
 	</div>
-	
-	
+
+
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 
 const app = new Vue({
 	el: '#app',
-	data() { 
+	data() {
 		return {
 			showForm: true,
 			newBook: {
-				
+
 			}
 			}
 		}
 	},
-		
-	
-	
+
+
+
 });
 
 
@@ -152,7 +152,7 @@ Vue.component("book-list", {
 
 const libForm = new Vue({
 	el: '#lib-form',
-	data() { 
+	data() {
 		return {
 			showForm: true,
 			newBook: {
@@ -167,10 +167,10 @@ const libForm = new Vue({
 	methods: {
 		toggleForm() {
 			this.showForm = !this.showForm;
-		},	
+		},
 		addNewBook() {
 			this.setId(this.myBooks, this.newBook);
-			
+
 			const savedBook = this.newBook;
 			this.$emit('add:newBook': this.newBook);
 			this.newBook: {
@@ -187,10 +187,10 @@ const libForm = new Vue({
 		toggleForm() {
 			this.showForm = !this.showForm;
 		},
-		
+
 		addNewBook() {
 			this.setId(this.myBooks, this.newBook);
-			
+
 			const savedBook = this.newBook;
 			this.$emit('add:newBook': this.newBook);
 			this.newBook: {
@@ -203,29 +203,31 @@ const libForm = new Vue({
 		//	this.myBooks.push(savedBook);
 			this.toggleForm();
 		},
-		
-		setId(objArr, newObj) {
+
+		setId(objArr) {
 			let objIds = [];
-			let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b); 
-	
+			let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b);
+
 			objIds = sortIds();
 			let userId = objIds[objIds.length - 1] + 1;
-	
+			return userId
+		}
+
 			return pushValidId(newObj, userId, objIds) ;
 
 			function pushValidId(newObj, newId, arr) {
 				let duper =  arr.some(u  =>  u  == newId);
-	
+
 				if(duper == false) {
-					newObj.id = newId ;	
-					console.log('duper found no dupes for new book ' + newObj.title);	
+					newObj.id = newId ;
+					console.log('duper found no dupes for new book ' + newObj.title);
 			 	} else {
  					console.log('dupes!');
-				} 
+				}
 			}
 		}
-	}, 
-	
+	},
+
 	beforeCreate() {
 		this.showForm = true;
 		console.log(this.showForm);
@@ -237,7 +239,7 @@ const libList = new Vue({
 	el: '#lib-list',
 	data: {
 		return {
-			myBooks: [		
+			myBooks: [
 		{
 			"id": 1,
 			"title": "The Road",
@@ -252,7 +254,7 @@ const libList = new Vue({
 			"year": 1970,
 			"isAvailable": false
 		},
-		{	
+		{
 			"id": 3,
 			"title": "Great Fatsby",
 			"author": "F Scott Fitzgerald",
@@ -263,15 +265,15 @@ const libList = new Vue({
 
 	} //end of data return block
 },
-	methods: {		
+	methods: {
 		addNewBook() {
 			this.setId(this.myBooks, this.newBook);
-			
+
 			const savedBook = this.newBook;
 			this.myBooks.push(savedBook);
 		}
 	},
-	
+
 });
 
 
@@ -282,7 +284,7 @@ const libList = new Vue({
 
 const app = new Vue({
 	el: '#app',
-	data() { 
+	data() {
 		return {
 			showForm: false,
 			newBook: {
@@ -290,7 +292,7 @@ const app = new Vue({
 				author: '',
 				year: 1900,
 				checkedOut: false,
-			}, 
+			},
 			myBooks: ['Thing1', 'Thing2', 'Thing3', 'Thing4', 'Thing5']
 		}
 	},
@@ -304,7 +306,7 @@ const app = new Vue({
 			console.log(this.showForm);
 			return this.showForm;
 		},
-		
+
 		addBook() {
 			let count = this.myThings.length;
 			this.myBooks.push(this.newBook);
@@ -366,9 +368,9 @@ const app = new Vue({
             data() {
                 return {
                     showForm: true,
-                    books: [ 
-                    
-                    
+                    books: [
+
+
                     ]
                 };
             },
@@ -424,7 +426,7 @@ let books = [
 	"isAvailable": true
 }
 ]
-    
+
 
 
 
@@ -469,7 +471,7 @@ let books = [
                     myBooks: []
                 }
             },
-            
+
                 }
             },
             template: '<div>books for days</div>'
@@ -480,9 +482,9 @@ let books = [
             data() {
                 return {
                     showForm: true,
-                    books: [ 
-                    
-                    
+                    books: [
+
+
                     ]
                 };
             },

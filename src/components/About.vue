@@ -24,6 +24,22 @@
 					<div class="title-card">Rat Boot Redux</div>
 					<div class="details-card" id="rat-boot-redux-details">Rat Boot Redux Details</div>
 				</div>
+				<div class="card-container" id="lazy-star">
+					<div class="title-card">Lazy Star</div>
+					<div class="details-card" id="lazy-star-details">Lazy Star Details</div>
+				</div>
+				<div class="card-container" id="rat-boot-redux">
+					<div class="title-card">Rat Boot Redux</div>
+					<div class="details-card" id="rat-boot-redux-details">Rat Boot Redux Details</div>
+				</div>
+				<div class="card-container" id="ave-maria">
+					<div class="title-card">Ave Maria</div>
+					<div class="details-card" id="ave-maria-details">Ave Maria Details</div>
+				</div>
+				<div class="card-container" id="walk-with-me">
+					<div class="title-card">Walk with Me</div>
+					<div class="details-card" id="walk-with-me-details">Walk with Me Details</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -39,6 +55,8 @@
 		box-sizing: border-box;
 		margin: 0%;
 		width: 750px;
+		max-height: 700px;
+
 		padding: 0px 0px 10px 0px;
 		margin: auto;
 		background: #ffffff;
@@ -62,6 +80,7 @@
 
 	#content-container {
 		padding: 5px;
+		max-height: 100%;
 	}
 
 	.subheader {
@@ -79,6 +98,8 @@
 		margin: 10px 20px;
 		padding: 15px;
 		width: auto;
+		max-height: 475px;
+		overflow: auto;
 		background: #dacb46c2;
 		border: 3px solid rgba(102, 103, 104, 0.6);
 		border: 1px solid white;
@@ -150,7 +171,7 @@
 			grid-template-columns: 1fr;
 			justify-content: space-around;
 			width: 100%;
-			height: 350px;
+			height: 550px;
 			margin: auto;
 			margin-bottom: 10px;
 			padding: 5px;

@@ -4,7 +4,6 @@
 			<form @submit.prevent="addItem" autocomplete="off">
 				<div class="button-container">
 					<input
-						ref="inputField"
 						type="text"
 						placeholder="Enter a task here..."
 						v-model="task"
@@ -24,25 +23,26 @@
 					>
 						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
 							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
-							<div v-if="revealStatus === id" class="item-data-display">
-								<input
-									class="details-input"
-									v-if="editDetails === true || !task.details"
-									ref="detailsInput"
-									type="text"
-									v-model="task.details"
-									@keypress.enter="updateItem(id)"
-								/>
-								<p v-else @click="editDetails = true">{{ task.details }}</p>
-								<input
-									class="details-save"
-									v-if="editDetails === true || !task.details"
-									type="button"
-									value="OK"
-									@click="updateItem(id)"
-								/>
+							<div id="date-cell" class="task-cell">
+								<span>11/29/2019</span>
 							</div>
-							<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
+							<span class="task-cell">
+								<i class="fa fa-minus-circle" v-show="revealState == id" v-on:click="deleteItem(id)"></i>
+							</span>
+							<div v-if="revealState === id" id="item-data-display" class="task-cell">
+								<form
+									v-if="editDetails === true || !task.details"
+									id="update-form"
+									class="task-cell bottom"
+								>
+									<input class="details-input" type="textarea" v-model="task.details" />
+									<input class="details-save" type="button" value="OK" @click="updateItem(task.id)" />
+								</form>
+								<span v-else @click="editDetails = true">{{ task.details }}</span>
+							</div>
+							<div v-show="revealState === id" id="state-cell" class="task-cell bottom">
+								<span>Reveal Status: {{revealState}}</span>
+							</div>
 						</li>
 					</transition-group>
 				</ul>
@@ -71,7 +71,7 @@
 				task: "",
 				tasks: [],
 				submitState: false,
-				revealStatus: null,
+				revealState: null,
 				showAlert: false,
 				actionBrief: {
 					itemName: "",
@@ -95,7 +95,7 @@
 					// this.$refs.inputField.focus();
 				} else if (isValid === true && this.submitState === true) {
 					this.tasks.push({
-						id: this.tasks.length + 1,
+						// id: this.newId(this.tasks),
 						name: this.task,
 						details: this.task.details
 					});
@@ -107,6 +107,13 @@
 				this.task = "";
 			},
 
+			updateItem(id) {
+				console.log(id);
+
+				this.editDetails = false;
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(this.tasks[id].name, "update", "success");
+			},f 
 			deleteItem(id) {
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
@@ -118,23 +125,17 @@
 			toggleItemReveal(id) {
 				this.submitState = false;
 
-				if (this.revealStatus === id) {
-					this.revealStatus = null;
+				if (this.revealState === id) {
+					this.revealState = null;
 				} else {
-					this.revealStatus = id;
+					this.revealState = id;
 					this.editDetails = false;
 				}
 
 				//special case for the actionBrief - status is not success or error
-				this.revealStatus != null
+				this.revealState != null
 					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
 					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
-			},
-
-			updateItem(id) {
-				this.editDetails = false;
-				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(this.tasks[id].name, "update", "success");
 			},
 
 			/* AUX/UTILITY FUNCTIONS - used in other functions  */
@@ -147,6 +148,15 @@
 				} else {
 					return true;
 				}
+			},
+
+			setId(objArr) {
+				let objIds = [];
+				let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b);
+
+				objIds = sortIds();
+				let userId = objIds[objIds.length - 1] + 1;
+				return userId;
 			},
 
 			//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
@@ -185,6 +195,12 @@
 				let count = 0;
 				count = this.tasks.length;
 				return count;
+			},
+			newId(itemArray){
+				itemArray.forEach(item => {
+					item.id = itemArray.indexOf(item);
+					console.log(Object.entries(item))	;
+				});
 			}
 		},
 		mounted() {
@@ -241,8 +257,12 @@
 	}
 
 	.taskItem {
-		display: flex;
-		justify-content: space-between;
+		/* display: flex;
+										justify-content: space-evenly; */
+		/* align-items: center; */
+		display: grid;
+		grid-template-columns: 3fr 2fr 2fr; /* justify-content: space-evenly; */
+		grid-template-rows: 2;
 		align-items: center;
 		padding: 17px;
 		padding-left: 24px;
@@ -259,17 +279,30 @@
 			padding 250ms ease-out;
 	}
 
+	.task-cell {
+		font-size: 0.8em;
+		padding: 5px 10px;
+		text-align: center;
+	}
+
+	.bottom {
+		/* background:  #bcc0c2;
+			height: 100%;
+			width: 100%; */
+	}
+
 	.taskItem:hover {
-		border: 2px solid #404b4b8c;
+		border: 1px solid #404b4b8c;
 		border-right: 0px;
-		border-left: 16px solid #dacb46;
+		border-left: 17px solid #dacb46;
 		color: #304141;
-		font-weight: 500;
-		font-size: 1.5em;
+		/* font-weight: 500; */
 		background-color: #dce6eb;
-		padding-left: 6px;
+		padding-left: 16px;
+		padding-right: 21px;
 	}
 	.task-text {
+		/* font-size: 1.5em; */
 		text-decoration: none;
 		cursor: pointer;
 		font-weight: 500;
@@ -301,12 +334,17 @@
 		border-radius: 5px 5px 2px 2px;
 	}
 
-	.item-data-display {
+	#item-data-display {
 		cursor: pointer;
+		grid-column: 1 / span 2;
+		font-size: 1em;
 	}
-
-	.details-input{
-		display:inline-block;
+	#update-form {
+		display: flex;
+		justify-content: space-evenly;
+	}
+	.details-input {
+		display: inline-block;
 		/* position: sticky; */
 		margin: 3px;
 		padding: 3px;
@@ -315,9 +353,6 @@
 		font-size: 1em;
 		border: 2px solid white;
 		border-radius: 10px;
-
-
-
 	}
 	.details-save {
 		/* z-index: 2; */
@@ -333,7 +368,6 @@
 		border-radius: 66%;
 		/* box-shadow: 0px 1px 1px 0px #ffffff83 */
 		cursor: pointer;
-
 	}
 
 	#submit-button {
@@ -422,10 +456,13 @@
 			height: auto;
 
 			margin: auto;
-			margin-top: 10px;
+			margin-top: 0px;
 		}
 		.taskItem {
 			width: auto;
+		}
+		.task-text {
+			font-size: 0.9em;
 		}
 	}
 
@@ -447,7 +484,7 @@
 		}
 
 		.taskItem:hover {
-			font-size: 1.1rem;
+			font-size: 1rem;
 		}
 		#submit-button {
 			font-size: 2rem;
@@ -467,13 +504,13 @@
 			height: auto;
 
 			margin: auto;
-			margin-top: 0;
+			margin-top: 0px;
 		}
 		.taskItem {
 			width: auto;
 		}
 
-		.details-save{
+		.details-save {
 			font-size: 0.7rem;
 			font-weight: 500;
 			padding: 5px 5px;

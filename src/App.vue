@@ -81,6 +81,7 @@
 	}
 	#app {
 		width: 750px;
+		max-height: 600px;
 		margin: auto;
 		margin-top: 0;
 		padding: 0;
@@ -109,7 +110,7 @@
 	}
 
 	nav {
-		padding: 20px 10px 5px 5px;
+		padding: 20px 10px 5px 10px;
 		width: 70%;
 		display: flex;
 		justify-content: flex-start;
@@ -156,17 +157,17 @@
 		body {
 			position: relative;
 			width: auto;
-			height: 100%;
+			/* height: 100%; */
 			font-size: 1rem;
 			align-items: center;
 			padding: 0;
-			padding-bottom: 15px;
+
 		}
 
 		#app {
 			width: 90%;
 			margin: auto;
-			height: 100%;
+			/* height: fit-content; */
 
 			margin-top: 0;
 		}

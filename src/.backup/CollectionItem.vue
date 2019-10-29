@@ -1,3 +1,5 @@
+
+/*
 <template>
 	<div class="item-container">
 		<span @click="toggleItemReveal(index)" class="item-text">{{ item.name }}</span>
@@ -14,7 +16,8 @@
 		name: "CollectionItem",
 		data() {
 			return {
-				revealStatus: false
+				revealStatus: false,
+				submitState: false
 			};
 		},
 		props: {
@@ -45,16 +48,18 @@
 				} else {
 					return true;
 				}
-			},
-
-			updateItem(id) {
-				this.editDetails = false;
-				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(this.tasks[id].name, "update", "success");
 			}
+
+			// updateItem(id) {
+			// 	this.editDetails = false;
+			// 	this.storeItems(this.tasks, "taskGuyList");
+			// 	this.updateActionBrief(this.tasks[id].name, "update", "success");
+			// }
 		}
 	};
 </script>
 
 <style>
 </style>
+
+*/
