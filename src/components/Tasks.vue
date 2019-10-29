@@ -113,7 +113,7 @@
 				this.editDetails = false;
 				this.storeItems(this.tasks, "taskGuyList");
 				this.updateActionBrief(this.tasks[id].name, "update", "success");
-			},f 
+			},
 			deleteItem(id) {
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
