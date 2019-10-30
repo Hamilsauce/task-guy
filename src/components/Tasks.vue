@@ -21,27 +21,37 @@
 						enter-active-class="animated bounceInUp"
 						leave-active-class="animated bounceOutDown"
 					>
-						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
+						<li v-for="(task, id) in tasks" :key="id" class="taskItem" >
 							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
 							<div id="date-cell" class="task-cell">
 								<span>11/29/2019</span>
 							</div>
 							<span class="task-cell">
-								<i class="fa fa-minus-circle" v-show="revealState == id" v-on:click="deleteItem(id)"></i>
+								<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
 							</span>
-							<div v-if="revealState === id" id="item-data-display" class="task-cell">
+							<div
+								v-show="revealState === id"
+								@click="editDetails = true"
+								id="item-data-display"
+								class="task-cell"
+							>
 								<form
 									v-if="editDetails === true || !task.details"
 									id="update-form"
 									class="task-cell bottom"
+									@submit.prevent="updateItem(task.name)"
 								>
 									<input class="details-input" type="textarea" v-model="task.details" />
-									<input class="details-save" type="button" value="OK" @click="updateItem(task.id)" />
 								</form>
-								<span v-else @click="editDetails = true">{{ task.details }}</span>
+								<span v-show="editDetails === false">{{ task.details }}</span>
 							</div>
-							<div v-show="revealState === id" id="state-cell" class="task-cell bottom">
-								<span>Reveal Status: {{revealState}}</span>
+							<div
+								v-show="revealState === id && editDetails === true"
+								id="state-cell"
+								class="task-cell bottom"
+							>
+								<input class="details-save" type="button" value="OK" @click="updateItem(task.name)" />
+								<!-- <span>Reveal Status: {{revealState}}</span> -->
 							</div>
 						</li>
 					</transition-group>
@@ -97,7 +107,7 @@
 					this.tasks.push({
 						// id: this.newId(this.tasks),
 						name: this.task,
-						details: this.task.details
+						details: "Click here to add notes!"
 					});
 
 					this.storeItems(this.tasks, "taskGuyList");
@@ -107,19 +117,21 @@
 				this.task = "";
 			},
 
-			updateItem(id) {
-				console.log(id);
+			updateItem(name) {
+				console.log(name);
 
 				this.editDetails = false;
 				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(this.tasks[id].name, "update", "success");
+				this.updateActionBrief(name, "update", "success");
 			},
+
 			deleteItem(id) {
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
 				this.storeItems(this.tasks, "taskGuyList");
 				this.updateActionBrief(deletedItem[0].name, "delete", "success");
 				this.task = "";
+				this.revealState = null;
 			},
 
 			toggleItemReveal(id) {
@@ -136,6 +148,9 @@
 				this.revealState != null
 					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
 					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+			},
+			toggleEditDetails() {
+				this.editDetails = !this.editDetails;
 			},
 
 			/* AUX/UTILITY FUNCTIONS - used in other functions  */
@@ -185,7 +200,10 @@
 			initializeItemList() {
 				let storedTasks = localStorage.getItem("taskGuyList")
 					? JSON.parse(localStorage.getItem("taskGuyList"))
-					: [{ task: "See tasks here..." }, { task: "Oh such task!" }];
+					: [
+							{ name: "See tasks here...", details: "Details go here!" },
+							{ name: "Oh such task!" }
+					  ];
 				this.tasks = storedTasks;
 				// this.$refs.inputField.focus();
 			}
@@ -196,10 +214,10 @@
 				count = this.tasks.length;
 				return count;
 			},
-			newId(itemArray){
+			newId(itemArray) {
 				itemArray.forEach(item => {
 					item.id = itemArray.indexOf(item);
-					console.log(Object.entries(item))	;
+					console.log(Object.entries(item));
 				});
 			}
 		},
@@ -243,7 +261,7 @@
 	}
 
 	.task-list-view {
-		max-height: 300px;
+		max-height: 600px;
 		overflow: auto;
 		margin: 0px 2px;
 	}
@@ -258,16 +276,16 @@
 
 	.taskItem {
 		/* display: flex;
-										justify-content: space-evenly; */
+			justify-content: space-evenly; */
 		/* align-items: center; */
 		display: grid;
-		grid-template-columns: 3fr 2fr 2fr; /* justify-content: space-evenly; */
+		grid-template-columns: 4fr 1fr 1fr; /* justify-content: space-evenly; */
 		grid-template-rows: 2;
 		align-items: center;
-		padding: 17px;
+		padding: 10px;
 		padding-left: 24px;
 		padding-right: 20px;
-		font-size: 1.5em;
+		font-size: 1.2em;
 		background-color: #d9dee0;
 		border: 1px solid #fafafada;
 		border-bottom: 1px solid rgb(196, 194, 194);
@@ -279,18 +297,6 @@
 			padding 250ms ease-out;
 	}
 
-	.task-cell {
-		font-size: 0.8em;
-		padding: 5px 10px;
-		text-align: center;
-	}
-
-	.bottom {
-		/* background:  #bcc0c2;
-			height: 100%;
-			width: 100%; */
-	}
-
 	.taskItem:hover {
 		border: 1px solid #404b4b8c;
 		border-right: 0px;
@@ -298,8 +304,25 @@
 		color: #304141;
 		/* font-weight: 500; */
 		background-color: #dce6eb;
-		padding-left: 16px;
-		padding-right: 21px;
+		padding-left: 10px;
+		/* padding-right: 21px; */
+	}
+
+	/* need to add persistent highlighting for selected items */
+	.taskItemSelected {
+		border-left: 17px solid yellow;
+	}
+
+	.task-cell {
+		font-size: 0.8em;
+		padding: 5px 10px;
+		/* text-align: center; */
+	}
+
+	.bottom {
+		/* background:  #bcc0c2;
+				height: 100%;
+				width: 100%; */
 	}
 	.task-text {
 		/* font-size: 1.5em; */
@@ -336,17 +359,18 @@
 
 	#item-data-display {
 		cursor: pointer;
-		grid-column: 1 / span 2;
+		/* grid-column: 1 / span 2; */
 		font-size: 1em;
 	}
 	#update-form {
 		display: flex;
-		justify-content: space-evenly;
+		justify-content: space-between;
 	}
 	.details-input {
-		display: inline-block;
+		/* display: inline-block; */
 		/* position: sticky; */
 		margin: 3px;
+		width: 100%;
 		padding: 3px;
 		padding-left: 5px;
 		color: #425e5e;
@@ -362,9 +386,9 @@
 		margin: 2px;
 		font-weight: 600;
 		font-size: 0.8rem;
-		background: #434b4be7;
-		color: #e7e7e7;
-		border: 1px solid hsl(0, 0%, 100%);
+		background: #ffffff00;
+		color: #434b4be7;
+		border: 1px solid hsla(0, 0%, 100%, 0);
 		border-radius: 66%;
 		/* box-shadow: 0px 1px 1px 0px #ffffff83 */
 		cursor: pointer;
@@ -432,8 +456,10 @@
 		}
 	}
 	i {
-		/* float: right; */
+		float: right;
 		cursor: pointer;
+		font-size: 1.5em;
+		text-align: right;
 	}
 	i:hover {
 		/* float: right; */

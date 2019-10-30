@@ -81,7 +81,7 @@
 	}
 	#app {
 		width: 750px;
-		max-height: 600px;
+		max-height: 800px;
 		margin: auto;
 		margin-top: 0;
 		padding: 0;
