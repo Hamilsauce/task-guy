@@ -83,7 +83,7 @@
 		width: 750px;
 		max-height: 800px;
 		margin: auto;
-		margin-top: 0;
+		margin-top: 10px;
 		padding: 0;
 
 	}
@@ -93,6 +93,7 @@
 		/* font-weight: bold; */
 		font-size: 2.2rem;
 		width: 100%;
+		margin-top: 10px;
 
 		margin: 0;
 		margin-bottom: 20px;
@@ -194,8 +195,8 @@
 		#app {
 			width: 100%;
 			margin: auto;
-			height: 100%;
-			/* justify-content: center; */
+			max-height: 100%;
+			justify-content: center;
 			margin-top: 0;
 			margin-bottom: 0;
 		}
@@ -203,7 +204,7 @@
 		#app-header n {
 			width: 95%;
 			/* margin: auto; */
-			margin-top: 0;
+			margin-top: 10px;
 			padding-left: 10px;
 			font-size: 1.7rem;
 		}
@@ -211,11 +212,15 @@
 		nav a {
 			font-size: 1rem;
 			margin-bottom: 0;
+			padding-top: 0;
 		}
 
 		#user-display {
 			font-size: 0.9em;
 			margin-right: 10px;
+			margin-bottom: 0px;
+			padding-bottom: 0px;
+
 		}
 	}
 </style>

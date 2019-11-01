@@ -1,7 +1,6 @@
 <template>
 	<div v-if="showModal === true" class="modal-container">
-	<div v-if="showModal === true" @click="toggleModal" @keypressc="hideModal" class="modal-dimmer">
-	</div>
+		<div v-if="showModal === true" @click="toggleModal" @keypressc="hideModal" class="modal-dimmer"></div>
 		<div class="modal">
 			<h2>{{ message1 }}</h2>
 			<p>{{ message }}</p>
@@ -17,11 +16,11 @@
 	export default {
 		name: "IntroductionModal",
 		components: {},
-	
+
 		data() {
 			return {
 				message1: `Hello, I am Mr. Task Guy.`,
-				message: ` Don't believe we've met before; what's your name?`,
+				message: `Enter your name or die.`,
 				showModal: false,
 				username: ""
 			};

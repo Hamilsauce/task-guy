@@ -21,38 +21,46 @@
 						enter-active-class="animated bounceInUp"
 						leave-active-class="animated bounceOutDown"
 					>
-						<li v-for="(task, id) in tasks" :key="id" class="taskItem" >
+						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
 							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
-							<div id="date-cell" class="task-cell">
-								<span>11/29/2019</span>
+							<div id="completion-cell" class="task-cell">
+								<select id="complete-status" class="select-control">
+									<option>Not-started</option>
+									<option>In-Progress</option>
+									<option>Complete</option>
+								</select>
 							</div>
 							<span class="task-cell">
 								<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
 							</span>
-							<div
-								v-show="revealState === id"
-								@click="editDetails = true"
-								id="item-data-display"
-								class="task-cell"
-							>
-								<form
-									v-if="editDetails === true || !task.details"
-									id="update-form"
-									class="task-cell bottom"
-									@submit.prevent="updateItem(task.name)"
+							<div class="task-cell">
+								<div
+									v-if="revealState === id"
+									@click="editDetails = true"
+									id="item-data-display"
+									class="task-cell"
 								>
-									<input class="details-input" type="textarea" v-model="task.details" />
-								</form>
-								<span v-show="editDetails === false">{{ task.details }}</span>
+									<form
+										v-if="editDetails === true || !task.details"
+										id="update-form"
+										class="task-cell bottom"
+										@submit.prevent="updateItem(task.name)"
+									>
+										<textarea rows="5" class="details-input" type="textarea" v-model="task.details"></textarea>
+									</form>
+									<span v-show="editDetails === false">{{ task.details }}</span>
+								</div>
+								<div
+									v-show="revealState === id && editDetails === true"
+									id="save-buttton-cell"
+									class="task-cell bottom"
+								>
+									<input class="details-save" type="button" value="OK" @click="updateItem(task.name)" />
+								</div>
 							</div>
-							<div
-								v-show="revealState === id && editDetails === true"
-								id="state-cell"
-								class="task-cell bottom"
-							>
-								<input class="details-save" type="button" value="OK" @click="updateItem(task.name)" />
-								<!-- <span>Reveal Status: {{revealState}}</span> -->
-							</div>
+							<div v-show="revealState === id" id="date-cell" class="task-cell bottom">{{task.date}}</div>
+
+							<!-- <div>11/29/2019</div> -->
 						</li>
 					</transition-group>
 				</ul>
@@ -87,7 +95,8 @@
 					itemName: "",
 					actionType: "",
 					status: "" //looking for success, error, or none
-				}
+				},
+				newTaskDate: ''
 			};
 		},
 		props: {
@@ -104,16 +113,19 @@
 					// this.submitState = false;
 					// this.$refs.inputField.focus();
 				} else if (isValid === true && this.submitState === true) {
+					this.newTaskDate = new Date();
 					this.tasks.push({
+
 						// id: this.newId(this.tasks),
 						name: this.task,
-						details: "Click here to add notes!"
+						details: "Click here to add notes!",
+						date: this.newTaskDate.toDateString()
 					});
 
 					this.storeItems(this.tasks, "taskGuyList");
 					this.updateActionBrief(this.task, "add", "success");
 				}
-
+				this.newTaskDate = '';
 				this.task = "";
 			},
 
@@ -250,7 +262,7 @@
 		padding: 0px 2px 0px 1px;
 	}
 	#list-container {
-		box-sizing: border-box;
+		/* box-sizing: border-box; */
 		margin: auto;
 		width: 750px;
 		background: #fff;
@@ -261,7 +273,7 @@
 	}
 
 	.task-list-view {
-		max-height: 600px;
+		max-height: 550px;
 		overflow: auto;
 		margin: 0px 2px;
 	}
@@ -276,10 +288,10 @@
 
 	.taskItem {
 		/* display: flex;
-			justify-content: space-evenly; */
+								justify-content: space-evenly; */
 		/* align-items: center; */
 		display: grid;
-		grid-template-columns: 4fr 1fr 1fr; /* justify-content: space-evenly; */
+		grid-template-columns: 4fr 2fr 1fr; /* justify-content: space-evenly; */
 		grid-template-rows: 2;
 		align-items: center;
 		padding: 10px;
@@ -295,6 +307,7 @@
 		color: #425e5e;
 		transition: background-color 800ms ease-out, border 200ms ease-out,
 			padding 250ms ease-out;
+		/* width: 100%; */
 	}
 
 	.taskItem:hover {
@@ -304,7 +317,7 @@
 		color: #304141;
 		/* font-weight: 500; */
 		background-color: #dce6eb;
-		padding-left: 10px;
+		padding-left: 18px;
 		/* padding-right: 21px; */
 	}
 
@@ -314,15 +327,14 @@
 	}
 
 	.task-cell {
-		font-size: 0.8em;
-		padding: 5px 10px;
+		font-size: 0.9em;
+		padding: 5px 5px;
 		/* text-align: center; */
 	}
 
 	.bottom {
-		/* background:  #bcc0c2;
-				height: 100%;
-				width: 100%; */
+		padding: 0px 5px;
+		margin: 0px 5px;
 	}
 	.task-text {
 		/* font-size: 1.5em; */
@@ -360,30 +372,34 @@
 	#item-data-display {
 		cursor: pointer;
 		/* grid-column: 1 / span 2; */
-		font-size: 1em;
+		/* font-size: 0.9em; */
+		margin-left: 0px;
 	}
 	#update-form {
-		display: flex;
-		justify-content: space-between;
+		/* display: flex; */
+		/* justify-content: space-between; */
 	}
 	.details-input {
 		/* display: inline-block; */
 		/* position: sticky; */
+		box-sizing: border-box;
 		margin: 3px;
-		width: 100%;
+		margin-bottom: 0px;
 		padding: 3px;
 		padding-left: 5px;
+		padding-bottom: 0px;
+		width: 100%;
 		color: #425e5e;
-		font-size: 1em;
+		font-size: 1.3em;
 		border: 2px solid white;
 		border-radius: 10px;
 	}
 	.details-save {
 		/* z-index: 2; */
 		display: inline;
-		padding: 5px 7px;
+		padding: 0px 7px;
 		/* margin-top: 5px; */
-		margin: 2px;
+		margin: 0;
 		font-weight: 600;
 		font-size: 0.8rem;
 		background: #ffffff00;
@@ -392,6 +408,8 @@
 		border-radius: 66%;
 		/* box-shadow: 0px 1px 1px 0px #ffffff83 */
 		cursor: pointer;
+	}
+	.bottom {
 	}
 
 	#submit-button {
@@ -408,6 +426,13 @@
 		background: rgba(255, 255, 255, 0);
 		cursor: pointer;
 		transition: background 200ms ease-out, font-weight 200ms ease-out;
+	}
+	#complete-status{
+		font-size: 1em;
+		padding: 2px 2px;
+		border-radius: 5px;
+		color: #4c6670;
+		background: rgb(247, 247, 247);
 	}
 
 	#submit-button:hover {
@@ -511,15 +536,24 @@
 
 		.taskItem:hover {
 			font-size: 1rem;
+
+			border: 1px solid #404b4b8c;
+			border-right: 0px;
+			border-left: 15px solid #dacb46;
+			color: #304141;
+			/* font-weight: 500; */
+			background-color: #dce6eb;
+			padding-left: 5px;
+			/* padding-right: 21px; */
 		}
 		#submit-button {
 			font-size: 2rem;
-			padding-right: 5px;
+			/* padding-right: 5px; */
 		}
 		.main {
 			justify-content: space-around;
 			width: 99%;
-
+			max-height: 300px;
 			margin: auto;
 			margin-top: 0;
 		}
@@ -527,19 +561,38 @@
 		#list-container {
 			width: 100%;
 
-			height: auto;
+			max-height: 300px;
 
 			margin: auto;
 			margin-top: 0px;
 		}
+		.task-list-view {
+			max-height: 400px;
+		}
 		.taskItem {
 			width: auto;
+			padding: 3px;
 		}
-
+		.task-cell {
+			box-sizing: border-box;
+			padding: 5px 3px;
+			/* overflow: scroll; */
+		}
+		.details-input {
+			font-size: 1.1em;
+			margin-left: 0px;
+		}
 		.details-save {
 			font-size: 0.7rem;
 			font-weight: 500;
 			padding: 5px 5px;
+		}
+
+		.task-cell {
+			cursor: pointer;
+			/* grid-column: 1 / span 2; */
+			/* font-size: 0.9em; */
+			margin-left: 0px;
 		}
 	}
 </style>
