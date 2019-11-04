@@ -24,7 +24,7 @@
 						<li v-for="(task, id) in tasks" :key="id" class="taskItem">
 							<span @click="toggleItemReveal(id)" class="task-text">{{ task.name }}</span>
 							<div id="completion-cell" class="task-cell">
-								<select id="complete-status" class="select-control">
+								<select  v-model="task.completion" @change="changeCompletionStatus"  id="complete-status" class="select-control">
 									<option>Not-started</option>
 									<option>In-Progress</option>
 									<option>Complete</option>
@@ -33,17 +33,19 @@
 							<span class="task-cell">
 								<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
 							</span>
-							<div class="task-cell">
+							<div class="task-cell" id="details-cell">
 								<div
 									v-if="revealState === id"
-									@click="editDetails = true"
 									id="item-data-display"
+									@click="editDetails = true"
+
 									class="task-cell"
 								>
 									<form
 										v-if="editDetails === true || !task.details"
 										id="update-form"
 										class="task-cell bottom"
+										@keypress.enter="updateItem"
 										@submit.prevent="updateItem(task.name)"
 									>
 										<textarea rows="5" class="details-input" type="textarea" v-model="task.details"></textarea>
@@ -86,7 +88,8 @@
 		data() {
 			return {
 				editDetails: true,
-				task: "",
+				task: '',
+
 				tasks: [],
 				submitState: false,
 				revealState: null,
@@ -96,7 +99,8 @@
 					actionType: "",
 					status: "" //looking for success, error, or none
 				},
-				newTaskDate: ''
+				newTaskDate: '',
+				updatedCompletionStatus: ''
 			};
 		},
 		props: {
@@ -119,7 +123,8 @@
 						// id: this.newId(this.tasks),
 						name: this.task,
 						details: "Click here to add notes!",
-						date: this.newTaskDate.toDateString()
+						date: this.newTaskDate.toDateString(),
+						completion: this.updatedCompletionStatus
 					});
 
 					this.storeItems(this.tasks, "taskGuyList");
@@ -127,6 +132,15 @@
 				}
 				this.newTaskDate = '';
 				this.task = "";
+			},
+
+			changeCompletionStatus(id) {
+
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(this.task.name, "update", "success")
+
+				this.updatedCompletionStatus = '';
+				this.task = '';
 			},
 
 			updateItem(name) {
@@ -235,7 +249,12 @@
 		},
 		mounted() {
 			this.initializeItemList();
-		}
+		},
+		watch: {
+			// updatedCompletionStatus() {
+			// 	this.changeCompletionStatus(this.task.id);
+			// }
+		},
 	};
 	/* eslint-disable */
 </script>
@@ -291,13 +310,13 @@
 								justify-content: space-evenly; */
 		/* align-items: center; */
 		display: grid;
-		grid-template-columns: 4fr 2fr 1fr; /* justify-content: space-evenly; */
+		grid-template-columns: 3fr 2fr 1fr; /* justify-content: space-evenly; */
 		grid-template-rows: 2;
 		align-items: center;
 		padding: 10px;
 		padding-left: 24px;
 		padding-right: 20px;
-		font-size: 1.2em;
+		font-size: 1.1em;
 		background-color: #d9dee0;
 		border: 1px solid #fafafada;
 		border-bottom: 1px solid rgb(196, 194, 194);
@@ -368,10 +387,13 @@
 		margin: 0px 0px 0px 0px;
 		border-radius: 5px 5px 2px 2px;
 	}
+	#details-cell {
+		grid-column: 1 / span 2;
+	}
 
 	#item-data-display {
 		cursor: pointer;
-		/* grid-column: 1 / span 2; */
+		grid-column: 2 / span 3;
 		/* font-size: 0.9em; */
 		margin-left: 0px;
 	}
@@ -409,6 +431,11 @@
 		/* box-shadow: 0px 1px 1px 0px #ffffff83 */
 		cursor: pointer;
 	}
+	#date-cell{
+		margin: 0px;
+		padding: 0px;
+		font-size: 15px;
+	}
 	.bottom {
 	}
 
@@ -428,11 +455,21 @@
 		transition: background 200ms ease-out, font-weight 200ms ease-out;
 	}
 	#complete-status{
-		font-size: 1em;
 		padding: 2px 2px;
-		border-radius: 5px;
-		color: #4c6670;
-		background: rgb(247, 247, 247);
+		width: 150px;
+		color: #434b4be7;
+		font-size: 1.1em;
+		background: rgba(255, 255, 255, 0.514);
+		border: 0px solid grey;
+		border-bottom: 1px solid rgba(83, 100, 99, 0.719);
+		border-radius: 2px;
+		text-align: center;
+	}
+
+	#completion-cell {
+		padding: 3px 0px;
+		margin: auto;
+
 	}
 
 	#submit-button:hover {
@@ -557,7 +594,12 @@
 			margin: auto;
 			margin-top: 0;
 		}
-
+#item-data-display {
+		cursor: pointer;
+		grid-column: 2 / span 1;
+		/* font-size: 0.9em; */
+		margin-left: 0px;
+	}
 		#list-container {
 			width: 100%;
 
@@ -567,7 +609,7 @@
 			margin-top: 0px;
 		}
 		.task-list-view {
-			max-height: 400px;
+			max-height: 350px;
 		}
 		.taskItem {
 			width: auto;
@@ -583,14 +625,14 @@
 			margin-left: 0px;
 		}
 		.details-save {
-			font-size: 0.7rem;
+			font-size: 0.9rem;
 			font-weight: 500;
 			padding: 5px 5px;
 		}
 
 		.task-cell {
 			cursor: pointer;
-			/* grid-column: 1 / span 2; */
+			/* grid-column: 1 / span 4; */
 			/* font-size: 0.9em; */
 			margin-left: 0px;
 		}

@@ -195,7 +195,7 @@
 		#app {
 			width: 100%;
 			margin: auto;
-			max-height: 100%;
+			max-height: 400px;
 			justify-content: center;
 			margin-top: 0;
 			margin-bottom: 0;
