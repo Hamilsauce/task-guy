@@ -16,65 +16,20 @@
 			</form>
 			<div class="task-list-view">
 				<ul>
-					<transition-group
+					<!-- <transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
 						leave-active-class="animated bounceOutDown"
-					>
-					/*
-						! moving to taskItem */
-						<li v-for="(task, id) in tasks" :key="id" class="taskItem" :class="{taskItemSelected: revealState === id}">
-							<div class="task-name-cell" @click="toggleItemReveal(id)">
-								<span  class="task-text">{{ task.name }}</span>
-							</div>
-							<div id="completion-cell" class="task-cell">
-								<select  v-model="task.completion" @change="changeCompletionStatus"  id="complete-status-input" class="select-control">
-									<option>Not-started</option>
-									<option>In-Progress</option>
-									<option>Complete</option>
-								</select>
-							</div>
-							<span class="task-cell">
-								<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
-							</span>
-							<div class="task-cell" id="details-cell">
-								<div
-									v-if="revealState === id"
-									id="item-data-display"
-									@click="editDetails = true"
+					> -->
 
-									class="task-cell"
-								>
-									<form
-										v-if="editDetails === true || !task.details"
-										id="update-form"
-										class="task-cell bottom"
-										@keypress.enter="updateItem"
-										@submit.prevent="updateItem(task.name)"
-									>
-										<textarea rows="5" class="details-input-input" type="textarea" v-model="task.details"></textarea>
-									</form>
-									<span v-show="editDetails === false">{{ task.details }}</span>
-								</div>
-								<div
-									v-show="revealState === id && editDetails === true"
-									id="save-buttton-cell"
-									class="task-cell bottom"
-								>
-									<input class="details-save-button" type="button" value="OK" @click="updateItem(task.name)" />
-								</div>
-							</div>
-							<div v-show="revealState === id" id="date-cell" class="task-cell bottom">{{task.date}}</div>
-
-							<!-- <div>11/29/2019</div> -->
-						</li>
-					</transition-group>
+						<TaskItem :task="task" v-for="(task, id) in tasks" :key="id"></TaskItem>
+					<!-- </transition-group> -->
 				</ul>
 			</div>
-			<message-center v-bind:actionBrief="actionBrief" :itemCount="itemCount" class="messageBox" />
 			<!-- <p v-if="tasks.length > 1"  class="messageBox">You got some tasks!</p>
 			<p v-else-if="tasks.length == 1" class="messageBox">You gone and got yourself a task!</p>
 			<p v-else-if="tasks.length < 1" class="messageBox">Not a damn task!</p>-->
+			<message-center v-bind:actionBrief="actionBrief" :itemCount="itemCount" class="messageBox" />
 		</div>
 		<div v-bind:class="{alert: showAlert}"></div>
 	</div>
@@ -82,12 +37,14 @@
 
 <script>
 	/* eslint-disable */
-	import MessageCenter from "./MessageCenter.vue";
+    import MessageCenter from "./MessageCenter.vue";
+    import TaskItem from "./taskItem.vue"
 
 	export default {
-		name: "Tasks",
+		name: "Tasks2",
 		components: {
-			MessageCenter
+            MessageCenter,
+            TaskItem
 		},
 		data() {
 			return {
@@ -575,7 +532,7 @@
 		}
 	}
 
-	@media screen and (max-width: 450px) {
+		@media screen and (max-width: 450px) {
 		.taskItem,
 		#task-input,
 		.messageBox,

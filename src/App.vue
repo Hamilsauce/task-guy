@@ -10,6 +10,7 @@
 		<nav>
 			<router-link to="/">Home</router-link>
 			<router-link to="/about">Library</router-link>
+			<router-link to="/tasks2">Tasks2</router-link>
 		</nav>
 		<router-view></router-view>
 	</div>
@@ -195,7 +196,8 @@
 		#app {
 			width: 100%;
 			margin: auto;
-			max-height: 400px;
+			/* max-height: 400px; */
+			height: 100%;
 			justify-content: center;
 			margin-top: 0;
 			margin-bottom: 0;
@@ -219,7 +221,7 @@
 			font-size: 0.9em;
 			margin-right: 10px;
 			margin-bottom: 0px;
-			padding-bottom: 0px;
+			padding-bottom: 5px;
 
 		}
 	}
