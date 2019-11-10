@@ -64,7 +64,7 @@
 							output = `The item ${name} was not ${type}d`;
 						} else {
 							//no status included...will depend on action type
-						
+
 						}
 						break;
 					default:
@@ -95,4 +95,13 @@
 	};
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+	height: 100%;
+		background: #fff;
+		box-shadow: 0px 8px 15px 8px rgba(104, 96, 96, 0.233);
+		border: 0px outset #3f474752;
+		border-top: 0px;
+		border-radius: 5px 5px 5px 5px;
+}
+</style>

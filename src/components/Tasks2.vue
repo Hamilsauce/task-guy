@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<div id="list-container">
-			<form @submit.prevent="addItem()" autocomplete="off">
+			<form @submit.prevent="addItem" autocomplete="off">
 				<div class="button-container">
 					<input
 						type="text"
@@ -16,63 +16,20 @@
 			</form>
 			<div class="task-list-view">
 				<ul>
-					<transition-group
+					<!-- <transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
-						leave-active-class="animated bounceOutDown">
+						leave-active-class="animated bounceOutDown"
+					> -->
 
-						<li v-for="(task, id) in tasks" :key="id" class="taskItem" :class="{taskItemSelected: revealState === id}">
-							<div class="task-name-cell" @click="toggleItemReveal(id)">
-								<span  class="task-text">{{ task.name }}</span>
-							</div>
-							<div id="completion-cell" class="task-cell">
-								<select  v-model="task.completion" @change="changeCompletionStatus"  id="complete-status-input" class="select-control">
-									<option>Not-started</option>
-									<option>In-Progress</option>
-									<option>Complete</option>
-								</select>
-							</div>
-							<span class="task-cell">
-								<i class="fa fa-minus-circle" v-on:click="deleteItem(id)"></i>
-							</span>
-							<div class="task-cell" id="details-cell">
-								<div
-									v-if="revealState === id"
-									id="item-data-display"
-									@click="editDetails = true"
-
-									class="task-cell"
-								>
-									<form
-										v-if="editDetails === true || !task.details"
-										id="update-form"
-										class="task-cell bottom"
-										@keypress.enter="updateItem"
-										@submit.prevent="updateItem(task.name)"
-									>
-										<textarea rows="5" class="details-input-box" type="textarea" v-model="task.details"></textarea>
-									</form>
-									<span v-show="editDetails === false">{{ task.details }}</span>
-								</div>
-								<div
-									v-show="revealState === id && editDetails === true"
-									id="save-buttton-cell"
-									class="task-cell bottom"
-								>
-									<input class="details-save-button" type="button" value="OK" @click="updateItem(task.name)" />
-								</div>
-							</div>
-							<div v-show="revealState === id" id="date-cell" class="task-cell bottom">{{task.date}}</div>
-
-							<!-- <div>11/29/2019</div> -->
-						</li>
-					</transition-group>
+						<TaskItem :task="task" v-for="(task, id) in tasks" :key="id"></TaskItem>
+					<!-- </transition-group> -->
 				</ul>
 			</div>
-			<message-center v-bind:actionBrief="actionBrief" :itemCount="itemCount" class="messageBox" />
 			<!-- <p v-if="tasks.length > 1"  class="messageBox">You got some tasks!</p>
 			<p v-else-if="tasks.length == 1" class="messageBox">You gone and got yourself a task!</p>
 			<p v-else-if="tasks.length < 1" class="messageBox">Not a damn task!</p>-->
+			<message-center v-bind:actionBrief="actionBrief" :itemCount="itemCount" class="messageBox" />
 		</div>
 		<div v-bind:class="{alert: showAlert}"></div>
 	</div>
@@ -80,25 +37,28 @@
 
 <script>
 	/* eslint-disable */
-	import MessageCenter from "./MessageCenter.vue";
+    import MessageCenter from "./MessageCenter.vue";
+    import TaskItem from "./taskItem.vue"
 
 	export default {
-		name: "Tasks",
+		name: "Tasks2",
 		components: {
-			MessageCenter
+            MessageCenter,
+            TaskItem
 		},
 		data() {
 			return {
 				editDetails: true,
 				task: '',
+
 				tasks: [],
 				submitState: false,
 				revealState: null,
 				showAlert: false,
 				actionBrief: {
 					itemName: "",
-					actionType: '',
-					status: '' //looking for success, error, or none
+					actionType: "",
+					status: "" //looking for success, error, or none
 				},
 				newTaskDate: '',
 				updatedCompletionStatus: ''
@@ -114,31 +74,31 @@
 				let isValid = this.validateItemInput(this.task);
 
 				if (isValid === false && this.submitState === true) {
-					this.updateActionBrief('', 'add', 'error');
+					this.updateActionBrief("", "add", "error");
+					// this.submitState = false;
+					// this.$refs.inputField.focus();
 				} else if (isValid === true && this.submitState === true) {
 					this.newTaskDate = new Date();
-
 					this.tasks.push({
 
-						id: this.itemCount,
+						// id: this.newId(this.tasks),
 						name: this.task,
-						details: 'Click here to add notes!',
+						details: "Click here to add notes!",
 						date: this.newTaskDate.toDateString(),
-						completion: "Not-started"
+						completion: this.updatedCompletionStatus
 					});
 
-					this.storeItems(this.tasks, 'taskGuyList');
-					this.updateActionBrief(this.task, 'add', 'success');
+					this.storeItems(this.tasks, "taskGuyList");
+					this.updateActionBrief(this.task, "add", "success");
 				}
 				this.newTaskDate = '';
-				this.task = '';
+				this.task = "";
 			},
 
-			changeCompletionStatus() {
+			changeCompletionStatus(id) {
 
-
-				this.storeItems(this.tasks, 'taskGuyList');
-				this.updateActionBrief(this.task.name, 'update', 'success')
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(this.task.name, "update", "success")
 
 				this.updatedCompletionStatus = '';
 				this.task = '';
@@ -148,16 +108,16 @@
 				console.log(name);
 
 				this.editDetails = false;
-				this.storeItems(this.tasks, 'taskGuyList');
-				this.updateActionBrief(name, 'update', 'success');
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(name, "update", "success");
 			},
 
 			deleteItem(id) {
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
-				this.storeItems(this.tasks, 'taskGuyList');
-				this.updateActionBrief(deletedItem[0].name, 'delete', 'success');
-				this.task = '';
+				this.storeItems(this.tasks, "taskGuyList");
+				this.updateActionBrief(deletedItem[0].name, "delete", "success");
+				this.task = "";
 				this.revealState = null;
 			},
 
@@ -173,8 +133,8 @@
 
 				//special case for the actionBrief - status is not success or error
 				this.revealState != null
-					? this.updateActionBrief(this.tasks[id].name, 'reveal', 'reveal')
-					: this.updateActionBrief(this.tasks[id].name, 'reveal', 'conceal');
+					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
+					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
 			},
 			toggleEditDetails() {
 				this.editDetails = !this.editDetails;
@@ -192,14 +152,13 @@
 				}
 			},
 
-			setId(itemArray, item) {
-				let newId = [];
+			setId(objArr) {
+				let objIds = [];
+				let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b);
 
-				console.log(itemArray);
-				console.log(item);
-				let objIndex = itemArray.indexOf(item);
-				console.log(objIndex);
-
+				objIds = sortIds();
+				let userId = objIds[objIds.length - 1] + 1;
+				return userId;
 			},
 
 			//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
@@ -212,13 +171,13 @@
 			storeItems(taskList, itemName) {
 				if (!taskList || taskList.length == 0) {
 					// eslint-disable-next-line
-					console.log('No tasks found in list; clearing storage items');
+					console.log("No tasks found in list; clearing storage items");
 					localStorage.removeItem(itemName);
 					return;
 				} else if (!itemName) {
 					// eslint-disable-next-line
 					console.error(
-						'No item name supplied for storage reference; tasks not saved!'
+						"No item name supplied for storage reference; tasks not saved!"
 					);
 					return;
 				}
@@ -226,11 +185,11 @@
 			},
 
 			initializeItemList() {
-				let storedTasks = localStorage.getItem('taskGuyList')
-					? JSON.parse(localStorage.getItem('taskGuyList'))
+				let storedTasks = localStorage.getItem("taskGuyList")
+					? JSON.parse(localStorage.getItem("taskGuyList"))
 					: [
-							{ name: 'See tasks here...', details: 'Details go here!' },
-							{ name: 'Oh such task!' }
+							{ name: "See tasks here...", details: "Details go here!" },
+							{ name: "Oh such task!" }
 					  ];
 				this.tasks = storedTasks;
 				// this.$refs.inputField.focus();
@@ -238,8 +197,15 @@
 		},
 		computed: {
 			itemCount() {
-				let count = this.tasks.length + 1;
+				let count = 0;
+				count = this.tasks.length;
 				return count;
+			},
+			newId(itemArray) {
+				itemArray.forEach(item => {
+					item.id = itemArray.indexOf(item);
+					console.log(Object.entries(item));
+				});
 			}
 		},
 		mounted() {
@@ -256,8 +222,8 @@
 
 
 <style scoped>
-	@import 'https://cdn.jsdelivr.net/npm/animate.css@3.5.1';
-	@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+	@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+	@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
 	input:focus,
 	textarea:focus,
@@ -402,7 +368,23 @@
 	}
 
 /*
-
+! moving to taskItem */
+	.details-input-input {
+		/* display: inline-block; */
+		/* position: sticky; */
+		box-sizing: border-box;
+		margin: 3px;
+		margin-bottom: 0px;
+		padding: 3px;
+		padding-left: 5px;
+		padding-bottom: 0px;
+		width: 100%;
+		color: #425e5e;
+		font-size: 1.3em;
+		border: 2px solid white;
+		border-radius: 10px;
+	}
+/*
 ! moving to taskItem */
 	.details-save-button {
 		/* z-index: 2; */
@@ -550,7 +532,7 @@
 		}
 	}
 
-	@media screen and (max-width: 450px) {
+		@media screen and (max-width: 450px) {
 		.taskItem,
 		#task-input,
 		.messageBox,
@@ -613,7 +595,7 @@
 			padding: 3px;
 		}
 
-		.details-input-box {
+		.details-input-input {
 			font-size: 1.4em;
 			margin-left: 0px;
 		}

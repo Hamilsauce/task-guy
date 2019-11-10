@@ -4,12 +4,14 @@
 			v-if="displayModal == true"
 			v-model="username"
 			@add:username="updatedUsername"
+
 		/>
 		<p id="app-header">Mr. Task Guy</p>
 		<span id="user-display" @click="displayModal = true">Current user: {{ this.username }}</span>
 		<nav>
 			<router-link to="/">Home</router-link>
 			<router-link to="/about">Library</router-link>
+			<router-link to="/tasks2">Tasks2</router-link>
 		</nav>
 		<router-view></router-view>
 	</div>
@@ -32,9 +34,12 @@
 		},
 
 		methods: {
-			updatedUsername(username) {
+			updatedUsername(updatePackage) {
 				console.log("event works!");
-				this.username = username;
+				let [changedUsername, showModal] = updatePackage;
+
+				this.username =changedUsername;
+				this.displayModal = showModal;
 
 				localStorage.setItem("taskGuyUsername", this.username);
 			},
@@ -195,7 +200,8 @@
 		#app {
 			width: 100%;
 			margin: auto;
-			max-height: 400px;
+			/* max-height: 400px; */
+			height: 100%;
 			justify-content: center;
 			margin-top: 0;
 			margin-bottom: 0;
@@ -219,7 +225,7 @@
 			font-size: 0.9em;
 			margin-right: 10px;
 			margin-bottom: 0px;
-			padding-bottom: 0px;
+			padding-bottom: 5px;
 
 		}
 	}
