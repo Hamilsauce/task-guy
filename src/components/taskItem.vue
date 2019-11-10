@@ -20,10 +20,11 @@
 		</span>
 		<div class="task-cell" id="details-cell">
 			<div
+			@click="editDetails = true"
 				v-if="revealState === id"
 				id="item-data-display"
 				class="task-cell"
-				@click="editDetailHack = true"
+
 			>
 				<form
 					v-if="editDetails === true || !task.details"
@@ -32,7 +33,7 @@
 					@keypress.enter="updateItem"
 					@submit.prevent="updateItem(task.name)"
 				>
-					<textarea rows="4" class="details-input" type="textarea" v-model="task.details"></textarea>
+					<textarea rows="4" class="details-input-box" type="textarea" v-model="task.details"></textarea>
 				</form>
 				<span v-show="editDetails === false">{{ task.details }}</span>
 			</div>
@@ -41,7 +42,7 @@
 				id="save-buttton-cell"
 				class="task-cell bottom"
 			>
-				<input class="details-save" type="button" value="OK" @click="updateItem(task.name)" />
+				<input class="details-save-button" type="button" value="OK" @click="updateItem(task.name)" />
 			</div>
 		</div>
 		<div v-show="revealState === id" id="date-cell" class="task-cell bottom">{{task.date}}</div>
@@ -57,7 +58,7 @@
 		components: {},
 		data() {
 			return {
-                id: 1,
+                id: this.task.id,
 				editDetails: true,
 				submitState: false,
 				revealState: null,
@@ -80,7 +81,7 @@
 			},
 
 			// *!replace wotj event emitter
-			changeCompletionStatus(id) {
+			changeCompletionStatus() {
 				this.storeItems(this.tasks, "taskGuyList");
 				this.updateActionBrief(this.task.name, "update", "success");
 
@@ -103,8 +104,8 @@
 			},
 
 			// *!replace wotj event emitter
-			deleteItem(id) {
-				const deletedItem = this.tasks.splice(id, 1);
+			deleteItem() {
+				const deletedItem = this.tasks.splice(this.id - 1, 1);
 				this.submitState = false;
 				this.storeItems(this.tasks, "taskGuyList");
 				this.updateActionBrief(deletedItem[0].name, "delete", "success");
@@ -112,20 +113,22 @@
 				this.revealState = null;
 			},
 
-			toggleItemReveal(id) {
+			toggleItemReveal() {
 				this.submitState = false;
 
-				if (this.revealState === id) {
-					this.revealState = null;
+				console.log(this.id, this.task.id);
+
+				if (this.revealState === this.id) {
+					this.revealState = true;
 				} else {
-					this.revealState = id;
+					this.revealState = this.id;
 					this.editDetails = false;
 				}
 
 				//special case for the actionBrief - status is not success or error
-				this.revealState != null
-					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
-					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+				this.revealState != true
+					? this.updateActionBrief(this.task.name, "reveal", "reveal")
+					: this.updateActionBrief(this.task.name, "reveal", "conceal");
 			},
 
 			//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
@@ -194,6 +197,36 @@
 		margin: 0px 5px;
 	}
 
+		#details-cell {
+		grid-column: 1 / span 2;
+	}
+
+	.task-name-cell {
+		cursor: pointer;
+	}
+	.details-input-box {
+		/* display: inline-block; */
+		/* position: sticky; */
+		box-sizing: border-box;
+		margin: 3px;
+		margin-bottom: 0px;
+		padding: 3px;
+		padding-left: 5px;
+		padding-bottom: 0px;
+		width: 100%;
+		color: #425e5e;
+		font-size: 1.3em;
+		border: 2px solid white;
+		border-radius: 10px;
+	}
+
+
+		#item-data-display {
+		cursor: pointer;
+		grid-column: 2 / span 3;
+		/* font-size: 0.9em; */
+		margin-left: 0px;
+	}
 	.task-text {
 		text-decoration: none;
 		cursor: pointer;
@@ -258,16 +291,17 @@
 			margin-left: 0px;
 		}
 
-		.details-input-input {
+		.details-input-box {
 			font-size: 1.4em;
 			margin-left: 0px;
 		}
-
-		.details-save-button {
+	
+			.details-save-button {
 			font-size: 0.9rem;
 			font-weight: 500;
 			padding: 5px 5px;
 		}
+
 
 		.task-cell {
 			box-sizing: border-box;

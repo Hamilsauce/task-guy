@@ -4,6 +4,7 @@
 			v-if="displayModal == true"
 			v-model="username"
 			@add:username="updatedUsername"
+
 		/>
 		<p id="app-header">Mr. Task Guy</p>
 		<span id="user-display" @click="displayModal = true">Current user: {{ this.username }}</span>
@@ -33,9 +34,12 @@
 		},
 
 		methods: {
-			updatedUsername(username) {
+			updatedUsername(updatePackage) {
 				console.log("event works!");
-				this.username = username;
+				let [changedUsername, showModal] = updatePackage;
+
+				this.username =changedUsername;
+				this.displayModal = showModal;
 
 				localStorage.setItem("taskGuyUsername", this.username);
 			},

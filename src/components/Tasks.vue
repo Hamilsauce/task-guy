@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<div id="list-container">
-			<form @submit.prevent="addItem" autocomplete="off">
+			<form @submit.prevent="addItem()" autocomplete="off">
 				<div class="button-container">
 					<input
 						type="text"
@@ -50,7 +50,7 @@
 										@keypress.enter="updateItem"
 										@submit.prevent="updateItem(task.name)"
 									>
-										<textarea rows="5" class="details-input-input" type="textarea" v-model="task.details"></textarea>
+										<textarea rows="5" class="details-input-box" type="textarea" v-model="task.details"></textarea>
 									</form>
 									<span v-show="editDetails === false">{{ task.details }}</span>
 								</div>
@@ -91,7 +91,6 @@
 			return {
 				editDetails: true,
 				task: '',
-
 				tasks: [],
 				submitState: false,
 				revealState: null,
@@ -125,7 +124,7 @@
 						name: this.task,
 						details: 'Click here to add notes!',
 						date: this.newTaskDate.toDateString(),
-						completion: this.updatedCompletionStatus
+						completion: "Not-started"
 					});
 
 					this.storeItems(this.tasks, 'taskGuyList');
@@ -135,7 +134,8 @@
 				this.task = '';
 			},
 
-			changeCompletionStatus(id) {
+			changeCompletionStatus() {
+
 
 				this.storeItems(this.tasks, 'taskGuyList');
 				this.updateActionBrief(this.task.name, 'update', 'success')
@@ -402,23 +402,7 @@
 	}
 
 /*
-! moving to taskItem */
-	.details-input-input {
-		/* display: inline-block; */
-		/* position: sticky; */
-		box-sizing: border-box;
-		margin: 3px;
-		margin-bottom: 0px;
-		padding: 3px;
-		padding-left: 5px;
-		padding-bottom: 0px;
-		width: 100%;
-		color: #425e5e;
-		font-size: 1.3em;
-		border: 2px solid white;
-		border-radius: 10px;
-	}
-/*
+
 ! moving to taskItem */
 	.details-save-button {
 		/* z-index: 2; */
@@ -629,7 +613,7 @@
 			padding: 3px;
 		}
 
-		.details-input-input {
+		.details-input-box {
 			font-size: 1.4em;
 			margin-left: 0px;
 		}
