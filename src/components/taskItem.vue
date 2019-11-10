@@ -23,7 +23,7 @@
 				v-if="revealState === id"
 				id="item-data-display"
 				class="task-cell"
-				@click="editDetails = true"
+				@click="editDetailHack = true"
 			>
 				<form
 					v-if="editDetails === true || !task.details"
@@ -87,6 +87,11 @@
 				this.updatedCompletionStatus = "";
 				this.task = "";
 			},
+			editDetailHack() {
+			//*keeps giving me false error that editDetail doesnt exit, so making a function for it
+			this.editDetails = true;
+
+},
 
 			// *!replace wotj event emitter
 			updateItem(name) {

@@ -19,10 +19,8 @@
 					<transition-group
 						name="list"
 						enter-active-class="animated bounceInUp"
-						leave-active-class="animated bounceOutDown"
-					>
-					/*
-						! moving to taskItem */
+						leave-active-class="animated bounceOutDown">
+
 						<li v-for="(task, id) in tasks" :key="id" class="taskItem" :class="{taskItemSelected: revealState === id}">
 							<div class="task-name-cell" @click="toggleItemReveal(id)">
 								<span  class="task-text">{{ task.name }}</span>
@@ -100,8 +98,8 @@
 				showAlert: false,
 				actionBrief: {
 					itemName: "",
-					actionType: "",
-					status: "" //looking for success, error, or none
+					actionType: '',
+					status: '' //looking for success, error, or none
 				},
 				newTaskDate: '',
 				updatedCompletionStatus: ''
@@ -117,31 +115,30 @@
 				let isValid = this.validateItemInput(this.task);
 
 				if (isValid === false && this.submitState === true) {
-					this.updateActionBrief("", "add", "error");
-					// this.submitState = false;
-					// this.$refs.inputField.focus();
+					this.updateActionBrief('', 'add', 'error');
 				} else if (isValid === true && this.submitState === true) {
 					this.newTaskDate = new Date();
+
 					this.tasks.push({
 
-						// id: this.newId(this.tasks),
+						id: this.itemCount,
 						name: this.task,
-						details: "Click here to add notes!",
+						details: 'Click here to add notes!',
 						date: this.newTaskDate.toDateString(),
 						completion: this.updatedCompletionStatus
 					});
 
-					this.storeItems(this.tasks, "taskGuyList");
-					this.updateActionBrief(this.task, "add", "success");
+					this.storeItems(this.tasks, 'taskGuyList');
+					this.updateActionBrief(this.task, 'add', 'success');
 				}
 				this.newTaskDate = '';
-				this.task = "";
+				this.task = '';
 			},
 
 			changeCompletionStatus(id) {
 
-				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(this.task.name, "update", "success")
+				this.storeItems(this.tasks, 'taskGuyList');
+				this.updateActionBrief(this.task.name, 'update', 'success')
 
 				this.updatedCompletionStatus = '';
 				this.task = '';
@@ -151,16 +148,16 @@
 				console.log(name);
 
 				this.editDetails = false;
-				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(name, "update", "success");
+				this.storeItems(this.tasks, 'taskGuyList');
+				this.updateActionBrief(name, 'update', 'success');
 			},
 
 			deleteItem(id) {
 				const deletedItem = this.tasks.splice(id, 1);
 				this.submitState = false;
-				this.storeItems(this.tasks, "taskGuyList");
-				this.updateActionBrief(deletedItem[0].name, "delete", "success");
-				this.task = "";
+				this.storeItems(this.tasks, 'taskGuyList');
+				this.updateActionBrief(deletedItem[0].name, 'delete', 'success');
+				this.task = '';
 				this.revealState = null;
 			},
 
@@ -176,8 +173,8 @@
 
 				//special case for the actionBrief - status is not success or error
 				this.revealState != null
-					? this.updateActionBrief(this.tasks[id].name, "reveal", "reveal")
-					: this.updateActionBrief(this.tasks[id].name, "reveal", "conceal");
+					? this.updateActionBrief(this.tasks[id].name, 'reveal', 'reveal')
+					: this.updateActionBrief(this.tasks[id].name, 'reveal', 'conceal');
 			},
 			toggleEditDetails() {
 				this.editDetails = !this.editDetails;
@@ -195,13 +192,14 @@
 				}
 			},
 
-			setId(objArr) {
-				let objIds = [];
-				let sortIds = () => objArr.map(u => u.id).sort((a, b) => a - b);
+			setId(itemArray, item) {
+				let newId = [];
 
-				objIds = sortIds();
-				let userId = objIds[objIds.length - 1] + 1;
-				return userId;
+				console.log(itemArray);
+				console.log(item);
+				let objIndex = itemArray.indexOf(item);
+				console.log(objIndex);
+
 			},
 
 			//accepts generic actionProerty, so that it can be called at various points in the process to populate different prperties
@@ -214,13 +212,13 @@
 			storeItems(taskList, itemName) {
 				if (!taskList || taskList.length == 0) {
 					// eslint-disable-next-line
-					console.log("No tasks found in list; clearing storage items");
+					console.log('No tasks found in list; clearing storage items');
 					localStorage.removeItem(itemName);
 					return;
 				} else if (!itemName) {
 					// eslint-disable-next-line
 					console.error(
-						"No item name supplied for storage reference; tasks not saved!"
+						'No item name supplied for storage reference; tasks not saved!'
 					);
 					return;
 				}
@@ -228,11 +226,11 @@
 			},
 
 			initializeItemList() {
-				let storedTasks = localStorage.getItem("taskGuyList")
-					? JSON.parse(localStorage.getItem("taskGuyList"))
+				let storedTasks = localStorage.getItem('taskGuyList')
+					? JSON.parse(localStorage.getItem('taskGuyList'))
 					: [
-							{ name: "See tasks here...", details: "Details go here!" },
-							{ name: "Oh such task!" }
+							{ name: 'See tasks here...', details: 'Details go here!' },
+							{ name: 'Oh such task!' }
 					  ];
 				this.tasks = storedTasks;
 				// this.$refs.inputField.focus();
@@ -240,15 +238,8 @@
 		},
 		computed: {
 			itemCount() {
-				let count = 0;
-				count = this.tasks.length;
+				let count = this.tasks.length + 1;
 				return count;
-			},
-			newId(itemArray) {
-				itemArray.forEach(item => {
-					item.id = itemArray.indexOf(item);
-					console.log(Object.entries(item));
-				});
 			}
 		},
 		mounted() {
@@ -265,8 +256,8 @@
 
 
 <style scoped>
-	@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
-	@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+	@import 'https://cdn.jsdelivr.net/npm/animate.css@3.5.1';
+	@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
 
 	input:focus,
 	textarea:focus,
